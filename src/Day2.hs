@@ -18,11 +18,12 @@ data Policy = Policy { charcountMin :: Int
 data Row = Row Policy String
   deriving (Show, Eq)
 
-
 type Parser = Parsec Void String
+
 
 parseRows :: Parser [Row]
 parseRows = many (parseRow <* C.char '\n')
+
 
 parseRow :: Parser Row
 parseRow = do
@@ -35,9 +36,9 @@ parseRow = do
 parseInt :: Parser Int
 parseInt = read <$> some C.digitChar
 
+
 parsePolicy :: Parser Policy
 parsePolicy = do
-  -- todo min and max can have more than one digit!
   min <- parseInt
   C.char '-'
   max <- parseInt
@@ -56,6 +57,7 @@ rowValid (Row (Policy charMin charMax char) pass) = charCount <= charMax && char
 countValidRows :: [Row] -> Int
 countValidRows rows = length . filter rowValid $ rows
 
+
 doDay2 :: IO ()
 doDay2 = do
   putStrLn "Day 2"
@@ -67,6 +69,7 @@ doDay2 = do
       print rs
       print $ countValidRows rs
     Left _ -> putStrLn "The parser is wrong!"
+
 
 -- ========================================================
 -- testing:
