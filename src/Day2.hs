@@ -95,7 +95,7 @@ moreCases = [
 
 testParseRows :: IO ()
 testParseRows = do
-  print $ all (\(s, r) -> checkMatch s r) cases
+  print $ all (uncurry checkMatch) cases
   where
     checkMatch :: String -> Row -> Bool
     checkMatch s r =
