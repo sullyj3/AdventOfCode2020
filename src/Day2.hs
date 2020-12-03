@@ -15,7 +15,7 @@ data Policy = Policy { charcountMin :: Int
                      }
   deriving (Show, Eq)
 
-data Row = Row Policy String
+data Row = Row { rowPolicy :: Policy, rowPass :: String }
   deriving (Show, Eq)
 
 type Parser = Parsec Void String
@@ -47,65 +47,48 @@ parsePolicy = do
   pure $ Policy min max c
 
 
+xor :: Bool -> Bool -> Bool
+xor = (/=)
 
-rowValid :: Row -> Bool
-rowValid (Row (Policy charMin charMax char) pass) = charCount <= charMax && charCount >= charMin
+rowValidPart1 :: Row -> Bool
+rowValidPart1 (Row (Policy charMin charMax char) pass) = charCount <= charMax && charCount >= charMin
   where
     charCount = length . filter (==char) $ pass
 
+rowValidPart2 :: Row -> Bool
+rowValidPart2 (Row (Policy charMin charMax char) pass) = case (index pass charMin, index pass charMax) of
+  (Just c, Just d) -> (c == char) `xor` (d == char)
+  _ -> False
 
-countValidRows :: [Row] -> Int
-countValidRows rows = length . filter rowValid $ rows
+
+countValidRows :: (Row -> Bool) -> [Row] -> Int
+countValidRows p rows = length . filter p $ rows
+
+
+row1 = Row (Policy 1 3 'a') "abcde"
+
+-- $> rowValidPart2 row1
+
+index :: Eq a => [a] -> Int -> Maybe a
+index (x:_)  1 = Just x
+index (_:xs) n = index xs (n-1)
+index _ _ = Nothing
 
 
 doDay2 :: IO ()
 doDay2 = do
+  pure ()
   putStrLn "Day 2"
   putStrLn "====="
-
   s <- readFile "inputs/day2.txt"
-  case parse parseRows "day2.txt" s of
-    Right rs -> do
-      print rs
-      print $ countValidRows rs
-    Left _ -> putStrLn "The parser is wrong!"
+  let rows = case parse parseRows "day2.txt" s of
+        Right rs -> rs
+        Left e -> error (show e)
+
+  putStrLn "Part 1:"
+  print $ countValidRows rowValidPart1 rows
+
+  putStrLn "Part 2:"
+  print $ countValidRows rowValidPart2 rows
 
 
--- ========================================================
--- testing:
--- ========================================================
-
-cases = [ ("1-3 a: abcde", Row (Policy 1 3 'a') "abcde")
-        , ("1-3 b: cdefg", Row (Policy 1 3 'b') "cdefg")
-        , ("2-9 c: ccccccccc", Row (Policy 2 9 'c') "ccccccccc")
-        ]
-
-moreCases = [
-    "1-8 n: dpwpmhknmnlglhjtrbpx"
-  , "11-12 n: frpknnndpntnncnnnnn"
-  , "4-8 t: tmttdtnttkr"
-  , "12-18 v: vvvvvvvqvvvvvqvvgf"
-  , "3-4 c: cccc"
-  , "17-18 z: zzzzzzzzdzzzzzzgzr"
-  , "5-6 l: llltzl"
-  , "4-5 g: fzfng"
-  , "3-6 b: bjsbbxbb"
-  , "4-5 b: dbbbl"
-  ]
-
-testParseRows :: IO ()
-testParseRows = do
-  print $ all (uncurry checkMatch) cases
-  where
-    checkMatch :: String -> Row -> Bool
-    checkMatch s r =
-      case parse parseRow "afile" s of
-        Left _ -> False
-        Right parsedRow -> parsedRow == r
-
-
-testRowValid :: IO ()
-testRowValid = do
-  print numValid
-  where numValid = length . filter rowValid $ rows
-        rows = catMaybes $ parseMaybe parseRow <$> moreCases
