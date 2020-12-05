@@ -6,8 +6,7 @@ module Day04 (
   doDay4
   ) where
 
-import Data.List (foldl', intercalate, isPrefixOf)
-import Text.Megaparsec
+import           Text.Megaparsec hiding (count)
 import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Text.Megaparsec.Char as C
 import qualified Text.Megaparsec.Error as E
@@ -21,7 +20,11 @@ import Data.Foldable
 import Data.Char (isSpace)
 import Data.Either (partitionEithers)
 import Data.List.Split (splitOn)
-import Data.List (intersect, sort)
+import           Data.List ( foldl'
+                           , intercalate
+                           , isPrefixOf
+                           , intersect
+                           , sort)
 import Lib
 
 
@@ -49,10 +52,7 @@ part2 = do
   passports <- splitOn "\n\n" . trim <$> readFile fp
   let (lefts, rights) = partitionEithers . map (parse parsePassport fp) $ passports
 
-  print $ countWhere hasRequiredKeys rights
-
-
-countWhere = length .: filter
+  print $ count hasRequiredKeys rights
 
 
 trim :: String -> String
