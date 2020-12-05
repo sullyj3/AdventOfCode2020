@@ -10,11 +10,16 @@ module Day05 (
 import Data.Maybe (fromJust)
 import Text.Printf (printf)
 import Data.Foldable
+import Data.List
+import qualified Data.Map.Strict as M
+import           Data.Map.Strict (Map)
+import           Control.Monad
+import           Control.Monad.Extra (whenM)
 
 data Region = Reg { regStart :: Int
                   , regLen   :: Int } deriving (Show, Eq)
 
-data Side = Front | Back | SLeft | SRight deriving (Show, Eq)
+data Side = Front | Back | SLeft | SRight deriving (Show, Eq, Ord)
 
 
 type Path = [Side]
@@ -28,10 +33,6 @@ parseSide = \case
   "R" -> Just SRight
   _   -> Nothing
 
-parsePathUnsafe :: String -> Path
-parsePathUnsafe = fromJust . parsePath
-
-
 parsePath = traverse (parseSide . (:[]))
 
 
@@ -43,6 +44,7 @@ bSearch :: Int -> Path -> Int
 bSearch initialSize path = n
   where
     Reg n _ = foldl' narrow (Reg 0 initialSize) path
+
 
 narrow :: Region -> Side -> Region
 narrow (Reg {regStart, regLen}) = \case
@@ -64,13 +66,39 @@ getCol = bSearch 8
 
 doDay5 :: IO ()
 doDay5 = do
-  testPart1
-  pure ()
+  part1
+
 
 part1 = do
   let fp = "inputs/day5.txt"
   paths <- fromJust . traverse parsePath . lines <$> readFile fp
-  print $ maximum $ map (\p -> getSeatId (getRow p) (getCol p)) paths
+
+  theMap <- foldM add mempty paths
+
+  let sids = map (\(_,_,x) -> x) $ M.elems theMap
+  print $ maximum sids
+
+  pure ()
+    where
+      add :: Map Path (Int, Int, Int) -> Path -> IO (Map Path (Int, Int, Int))
+      add acc p = do
+          let matches = M.filter (==val) acc
+          when (matches /= mempty) $ do
+             putStrLn "Trying to insert"
+             print (p, val)
+             putStrLn "but val already exists in the map"
+             print matches
+             error "eek"
+
+
+          pure (M.insert p val acc)
+
+        where (rPath, colPath) = splitAt 7 p
+              r = getRow rPath
+              c = getCol colPath
+              sid = getSeatId r c
+              val = (r,c,sid)
+
 
 
 -- --------------

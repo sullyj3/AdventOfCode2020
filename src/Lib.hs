@@ -12,3 +12,5 @@ intList = map read . lines
 (.:) = (.) . (.)
 
 count = length .: filter
+
+allDistinct xs = (length . nub . sort) xs == (length . sort) xs
