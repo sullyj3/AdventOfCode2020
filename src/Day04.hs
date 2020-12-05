@@ -197,8 +197,8 @@ testPart2 = do
           passports <- splitOn "\n\n" . trim <$> readFile fp
           let results = (parse parsePassport fp) <$> passports
 
-          for_ results \r ->
-            either (\e -> putStrLn (E.errorBundlePretty e))
+          for_ results \res ->
+            either (\l -> putStrLn (E.errorBundlePretty l))
                    (\r -> print r)
-                   r
+                   res
           putStrLn "\n"
