@@ -4,6 +4,9 @@ module Lib
     , count
     ) where
 
+import Data.List ( sort
+                 , nub)
+
 -- warning - partial
 intList :: String -> [Int]
 intList = map read . lines
