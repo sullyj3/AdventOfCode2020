@@ -1,4 +1,4 @@
-module Day2 (
+module Day02 (
   doDay2
   ) where
 
@@ -66,8 +66,6 @@ countValidRows p rows = length . filter p $ rows
 
 
 row1 = Row (Policy 1 3 'a') "abcde"
-
--- $> rowValidPart2 row1
 
 index :: Eq a => [a] -> Int -> Maybe a
 index (x:_)  1 = Just x

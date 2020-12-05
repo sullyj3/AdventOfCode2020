@@ -1,4 +1,4 @@
-module Day9 (
+module Day09 (
   doDay9
   ) where
 

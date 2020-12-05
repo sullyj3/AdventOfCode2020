@@ -6,15 +6,15 @@ import System.IO
 import System.Environment (getArgs)
 import Text.Read (readMaybe)
 
-import Day1
-import Day2
-import Day3
-import Day4
-import Day5
-import Day6
-import Day7
-import Day8
-import Day9
+import Day01
+import Day02
+import Day03
+import Day04
+import Day05
+import Day06
+import Day07
+import Day08
+import Day09
 import Day10
 import Day11
 import Day12
@@ -32,7 +32,7 @@ import Day23
 import Day24
 import Day25
 
-currentDay = doDay3
+currentDay = doDay4
 
 main :: IO ()
 main = do
@@ -43,6 +43,7 @@ main = do
       Just 1 -> doDay1
       Just 2 -> doDay2
       Just 3 -> doDay3
+      Just 4 -> doDay4
       Just _ -> putStrLn "I haven't implemented that day yet!"
       Nothing -> putStrLn "That's not a number!"
     _ -> putStrLn "Please enter a day number!"

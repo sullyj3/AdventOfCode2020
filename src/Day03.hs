@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 
-module Day3 (
+module Day03 (
   doDay3
   ) where
 
