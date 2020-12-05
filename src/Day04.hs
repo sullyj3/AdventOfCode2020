@@ -24,7 +24,20 @@ import Data.List.Split (splitOn)
 import Data.List (intersect, sort)
 import Lib
 
-type Parser = Parsec Void String
+
+type Passport = [Pair]
+
+data Pair = BYR Int | IYR Int | EYR Int | HGT Height | HCL HairColor | ECL EyeColor | PID String | CID
+  deriving (Eq, Show)
+
+type HairColor = String
+
+data EyeColor = Amber | Blue | Brown | Gray | Green | Hazel | Other
+  deriving (Eq, Show)
+
+data Height = Cm Int | Inches Int
+  deriving (Show, Eq)
+
 
 doDay4 :: IO ()
 doDay4 = do
@@ -41,23 +54,6 @@ part2 = do
 
 countWhere = length .: filter
 
-testPart2 :: IO ()
-testPart2 = do
-  putStrLn "checking invalid examples fail:"
-  printResults "inputs/day4_invalid_examples.txt"
-  putStrLn "checking valid examples succeed:"
-  printResults "inputs/day4_valid_examples.txt"
-  where printResults :: FilePath -> IO ()
-        printResults fp = do
-          passports <- splitOn "\n\n" . trim <$> readFile fp
-          let results = (parse parsePassport fp) <$> passports
-
-          for_ results \r ->
-            either (\e -> putStrLn (E.errorBundlePretty e))
-                   (\r -> print r)
-                   r
-          putStrLn "\n"
-
 
 trim :: String -> String
 trim = dropWhile isSpace . reverse . dropWhile isSpace . reverse
@@ -73,18 +69,10 @@ hasRequiredKeys p = requiredKeys `allIn` keySet p
 allIn :: (Ord a, Eq a) => [a] -> [a] -> Bool
 allIn xs ys = sort xs == sort (xs `intersect` ys)
 
-type Passport = [Pair]
-
-data Pair = BYR Int | IYR Int | EYR Int | HGT Height | HCL HairColor | ECL EyeColor | PID String | CID
-  deriving (Eq, Show)
-
-type HairColor = String
-
-data EyeColor = Amber | Blue | Brown | Gray | Green | Hazel | Other
-  deriving (Eq, Show)
-
-data Height = Cm Int | Inches Int
-  deriving (Show, Eq)
+-- -----------------
+-- Parsing
+-- -----------------
+type Parser = Parsec Void String
 
 spaceorEol :: Parser ()
 spaceorEol = () <$ C.char ' ' <|> () <$ C.eol
@@ -92,8 +80,8 @@ spaceorEol = () <$ C.char ' ' <|> () <$ C.eol
 
 parsePassport :: Parser Passport
 parsePassport = do
-  pairs <- sepBy1 parsePair spaceorEol
-  pure pairs
+  sepBy1 parsePair spaceorEol
+
 
 parsePassports :: Parser [Passport]
 parsePassports = do
@@ -124,17 +112,20 @@ makeKvPairParser k parseVal = do
 parseYear :: Parser Int
 parseYear = read <$> replicateM 4 C.digitChar
 
+
 parseBirthyear = do
   y <- parseYear
   if | y < 1920 -> fail "Birth year too early!"
      | y > 2002 -> fail "Birth year too late!"
      | otherwise -> pure y
 
+
 parseIssueYear = do
   y <- parseYear
   if | y < 2010 -> fail "Issue year too early!"
      | y > 2020 -> fail "Issue year too late!"
      | otherwise -> pure y
+
 
 parseExpirYear = do
   y <- parseYear
@@ -152,8 +143,10 @@ parseEcl = makeKvPairParser "ecl" $ ECL <$> parseEyeColor
 parsePid = makeKvPairParser "pid" $ pidVal
 parseCid = makeKvPairParser "cid" $ cidVal
 
+
 parseHairColor :: Parser HairColor
 parseHairColor = C.char '#' *> replicateM 6 C.hexDigitChar
+
 
 parseEyeColor :: Parser EyeColor
 parseEyeColor = asum [ Amber <$ C.string "amb"
@@ -164,6 +157,8 @@ parseEyeColor = asum [ Amber <$ C.string "amb"
                      , Hazel <$ C.string "hzl"
                      , Other <$ C.string "oth"
                      ]
+
+
 parseHeight :: Parser Pair
 parseHeight = do
   h <- L.decimal
@@ -181,13 +176,29 @@ parseHeight = do
 pidVal :: Parser Pair
 pidVal = PID <$> replicateM 9 C.digitChar
 
+
 cidVal :: Parser Pair
 cidVal = CID <$ (some $ satisfy (not . isSpace))
 
 
-passportValid :: Passport -> Bool
-passportValid pass = let
-  requiredKeys = [ "ecl" , "pid" , "eyr" , "hcl" , "byr" , "iyr" , "hgt" ]
-  in undefined 
+-- -----------------
+-- Testing
+-- -----------------
 
 
+testPart2 :: IO ()
+testPart2 = do
+  putStrLn "checking invalid examples fail:"
+  printResults "inputs/day4_invalid_examples.txt"
+  putStrLn "checking valid examples succeed:"
+  printResults "inputs/day4_valid_examples.txt"
+  where printResults :: FilePath -> IO ()
+        printResults fp = do
+          passports <- splitOn "\n\n" . trim <$> readFile fp
+          let results = (parse parsePassport fp) <$> passports
+
+          for_ results \r ->
+            either (\e -> putStrLn (E.errorBundlePretty e))
+                   (\r -> print r)
+                   r
+          putStrLn "\n"
