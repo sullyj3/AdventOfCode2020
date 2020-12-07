@@ -59,16 +59,16 @@ parseBitString :: String -> Maybe BitString
 parseBitString = traverse (parseBit . (:[]))
 
 
-pathToRowCol :: String -> (Int, Int)
-pathToRowCol p = let (rPath, cPath) = splitAt 7 p
-                     (row, col) = ( bitStringInt . fromJust . parseBitString $ rPath
-                                  , bitStringInt . fromJust . parseBitString $ cPath )
+passToRowCol :: String -> (Int, Int)
+passToRowCol p = let (rowPath, colPath) = splitAt 7 p
+                     (row, col) = ( bitStringInt . fromJust . parseBitString $ rowPath
+                                  , bitStringInt . fromJust . parseBitString $ colPath )
                   in (row, col)
 
 doDay5 :: IO ()
 doDay5 = do
   let fp = "inputs/day5.txt"
-  rowCols <- map pathToRowCol . lines <$> readFile fp
+  rowCols <- map passToRowCol . lines <$> readFile fp
   let seatIds = S.fromList $ uncurry getSeatId <$> rowCols
 
   print $ part1 seatIds
