@@ -83,7 +83,7 @@ part2 plane = case S.toList matches of
     possibleIds = S.fromList [seatId r c | r <- possibleRows, c <- possibleCols]
     missingIds = possibleIds \\ plane
 
-    matches = S.filter p missingIds
+    matches = S.filter neighboursPresent missingIds
 
-    p :: SeatID -> Bool
-    p sid = ((sid-1) `S.member` plane) && ((sid+1) `S.member` plane)
+    neighboursPresent :: SeatID -> Bool
+    neighboursPresent sid = ((sid-1) `S.member` plane) && ((sid+1) `S.member` plane)
