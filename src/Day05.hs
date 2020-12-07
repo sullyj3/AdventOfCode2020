@@ -86,10 +86,4 @@ part2 plane = case S.toList matches of
     matches = S.filter p missingIds
 
     p :: SeatID -> Bool
-    p sid 
-      | r == 0 || r == 127 = False
-      | planeRow plane (r-1) == mempty = False
-      | planeRow plane (r+1) == mempty = False
-      | otherwise = True
-      where
-        (r, _c) = (seatRow sid, seatCol sid)
+    p sid = ((sid-1) `S.member` plane) && ((sid+1) `S.member` plane)
