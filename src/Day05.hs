@@ -17,8 +17,8 @@ type SeatID = Int
 type Row = Int
 type Col = Int
 
-getSeatId :: Row -> Col -> SeatID
-getSeatId row col = row * 8 + col
+seatId :: Row -> Col -> SeatID
+seatId row col = row * 8 + col
 
 seatRow :: SeatID -> Row
 seatRow = (`div` 8)
@@ -65,7 +65,7 @@ passToRowCol p = let (rowPath, colPath) = splitAt 7 p
 doDay5 :: IO ()
 doDay5 = do
   rowCols <- map passToRowCol . lines <$> readFile "inputs/day5.txt"
-  let seatIds = S.fromList $ uncurry getSeatId <$> rowCols
+  let seatIds = S.fromList $ uncurry seatId <$> rowCols
 
   print $ part1 seatIds
   print $ part2 seatIds
@@ -80,7 +80,7 @@ part2 plane = case S.toList matches of
   where
     possibleRows = [0..127]
     possibleCols = [0..7]
-    possibleIds = S.fromList [getSeatId r c | r <- possibleRows, c <- possibleCols]
+    possibleIds = S.fromList [seatId r c | r <- possibleRows, c <- possibleCols]
     missingIds = possibleIds \\ plane
 
     matches = S.filter p missingIds
