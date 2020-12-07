@@ -1,7 +1,4 @@
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE NamedFieldPuns #-}
 
 module Day05 (
   doDay5
@@ -67,8 +64,7 @@ passToRowCol p = let (rowPath, colPath) = splitAt 7 p
 
 doDay5 :: IO ()
 doDay5 = do
-  let fp = "inputs/day5.txt"
-  rowCols <- map passToRowCol . lines <$> readFile fp
+  rowCols <- map passToRowCol . lines <$> readFile "inputs/day5.txt"
   let seatIds = S.fromList $ uncurry getSeatId <$> rowCols
 
   print $ part1 seatIds
