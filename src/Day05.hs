@@ -9,19 +9,13 @@ module Day05 (
 
 import           Data.Maybe          (fromJust)
 import           Text.Printf         (printf)
-import           Data.Foldable
-import           Data.List
 import qualified Data.Set            as S
-import           Data.Set            (Set)
-import qualified Data.Map.Strict     as M
-import           Data.Map.Strict     (Map)
-import           Control.Monad
-import           Control.Monad.Extra (whenM)
+import           Data.Set            (Set, (\\))
 
 
 type BitString = [Bool]
 
-type Plane = Set Int
+type Plane = Set SeatID
 type SeatID = Int
 type Row = Int
 type Col = Int
@@ -73,22 +67,33 @@ pathToRowCol p = let (rPath, cPath) = splitAt 7 p
 
 doDay5 :: IO ()
 doDay5 = do
-  part1
-
-part1 :: IO ()
-part1 = do
   let fp = "inputs/day5.txt"
   rowCols <- map pathToRowCol . lines <$> readFile fp
-  let seatIds = uncurry getSeatId <$> rowCols
-  print $ maximum seatIds
+  let seatIds = S.fromList $ uncurry getSeatId <$> rowCols
 
+  print $ part1 seatIds
+  print $ part2 seatIds
 
+part1 :: Plane -> SeatID
+part1 = maximum
 
+part2 :: Plane -> SeatID
+part2 plane = case S.toList matches of
+  [myId] -> myId
+  matches -> error $ "more than one match!\n" <> unlines (map showSeat matches)
+  where
+    possibleRows = [0..127]
+    possibleCols = [0..7]
+    possibleIds = S.fromList [getSeatId r c | r <- possibleRows, c <- possibleCols]
+    missingIds = possibleIds \\ plane
 
+    matches = S.filter p missingIds
 
-
-testCases = [ ("BFFFBBFRRR", 70,  7, 567)
-            , ("FFFBBBFRRR", 14,  7, 119)
-            , ("BBFFBBFRLL", 102, 4, 820)
-            ]
-
+    p :: SeatID -> Bool
+    p sid 
+      | r == 0 || r == 127 = False
+      | planeRow plane (r-1) == mempty = False
+      | planeRow plane (r+1) == mempty = False
+      | otherwise = True
+      where
+        (r, _c) = (seatRow sid, seatCol sid)
