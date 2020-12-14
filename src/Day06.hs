@@ -19,4 +19,6 @@ parse :: String -> [[String]]
 parse = splitOn [""] . lines
 
 doDay6 :: IO ()
-doDay6 = readFile "inputs/day6.txt" >>= (print . part2 . parse)
+doDay6 = do 
+  input <- readFile "inputs/day6.txt" 
+  print . part2 . parse $ input
