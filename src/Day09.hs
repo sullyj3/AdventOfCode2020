@@ -22,8 +22,8 @@ any2AddTo n vec
 
 findWeakness :: Int -> Vector Int -> Int
 findWeakness preambleLen ns = (ns !) $ fromJust $ flip find [preambleLen..Vec.length ns-1] \i ->
-  let precendingN = Vec.slice (i-preambleLen) preambleLen ns
-   in not $ any2AddTo (ns ! i) precendingN
+  let precedingN = Vec.slice (i-preambleLen) preambleLen ns
+   in not $ any2AddTo (ns ! i) precedingN
 
 doDay9 :: IO ()
 doDay9 = do
