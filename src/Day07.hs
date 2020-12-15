@@ -39,6 +39,8 @@ canContain bagType containedByMap
   | immediatelyContainedBy == mempty = mempty
   | otherwise = result
   where
+      -- if a type isn't present as a key in the map, it can't be contained by
+      -- any other type, so we're at the end
       immediatelyContainedBy = M.findWithDefault mempty bagType containedByMap
       result = foldr (\ty set -> if ty `S.member` set
                                  -- if it's a member, we must have already found and added
