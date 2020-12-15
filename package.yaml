@@ -25,6 +25,7 @@ dependencies:
 - megaparsec
 - split
 - extra
+- mtl
 
 library:
   source-dirs: src
