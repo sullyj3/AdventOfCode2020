@@ -35,7 +35,7 @@ instance Semigroup JoltGaps where
 
 
 part1 :: [Int] -> Int
-part1 ns = sz1 * (sz3 + 1) -- add one size 3 gap of max to built in adapter
+part1 ns = sz1 * (sz3 + 1) -- add one size 3 gap of max to built in device adapter
   where ns' = NE.fromList . sort $ 0:ns -- include 0 for seat outlet
         JG _ _ sz3 sz1 = foldMap1 toJoltGaps ns'
 
