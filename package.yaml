@@ -27,6 +27,7 @@ dependencies:
 - extra
 - mtl
 - vector
+- semigroupoids
 
 library:
   source-dirs: src
