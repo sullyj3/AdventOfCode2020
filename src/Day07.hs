@@ -12,6 +12,7 @@ import qualified Data.Map as M
 import           Data.Map (Map, (!))
 import qualified Data.Set as S
 import           Data.Set (Set)
+import           Data.Tuple (swap)
 
 import Debug.Trace (trace)
 
@@ -20,11 +21,13 @@ data Rule = Rule { ruleBagType :: String
                  }
   deriving Show
 
+type BagType = String
+
 
 -- Based on the containment rules, build a dag representing the possible bag types
 -- that each bag type could be directly contained by. Represented as a Map
 -- from bag type to set of types that can immediately contain it.
-containedByDag :: [Rule] -> Map String (Set String)
+containedByDag :: [Rule] -> Map BagType (Set BagType)
 containedByDag rules = foldr addrule mempty rules
   where addrule :: Rule -> Map String (Set String) -> Map String (Set String)
         addrule (Rule ty contents) acc = foldr f acc (snd <$> contents)
@@ -34,7 +37,7 @@ containedByDag rules = foldr addrule mempty rules
 
 
 -- the set of bag types that can transitively contain the given bag type
-canContain :: String -> Map String (Set String) -> Set String
+canContain :: BagType -> Map BagType (Set BagType) -> Set BagType
 canContain bagType containedByMap
   | immediatelyContainedBy == mempty = mempty
   | otherwise = result
@@ -51,6 +54,19 @@ canContain bagType containedByMap
                      immediatelyContainedBy
 
 
+mustContain :: [Rule] -> Map BagType (Map BagType Int)
+mustContain rules = foldr addrule mempty rules
+  where addrule :: Rule -> Map String (Map String Int) -> Map String (Map String Int)
+        addrule (Rule ty contents) acc = M.insert ty (toMap contents) acc
+
+        toMap :: [(Int, String)] -> Map String Int
+        toMap = M.fromList . map swap
+
+
+transitiveCountContents :: BagType -> Map BagType (Map BagType Int) -> Int
+transitiveCountContents = undefined
+
+
 doDay7 :: IO ()
 doDay7 = do
   -- let fp = "inputs/day7test.txt"
@@ -58,9 +74,16 @@ doDay7 = do
   input <- readFile fp
   case parse parseRules fp input of
     Left e -> error $ "bad parser: " <> show e
-    Right rules ->
-      do let dag = containedByDag rules
-         print . S.size $ canContain "shiny gold" dag
+    Right rules -> part1 rules
+
+part1 rules = do 
+  let dag = containedByDag rules
+  print . S.size $ canContain "shiny gold" dag
+
+part2 rules = do
+  let m = mustContain rules
+  putStrLn $ showMap m
+
 
 
 -- parsing
