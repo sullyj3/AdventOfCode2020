@@ -74,9 +74,9 @@ doDay7 = do
   -- let fp = "inputs/day7test2.txt"
   let fp = "inputs/day7.txt"
   input <- readFile fp
-  case parse parseRules fp input of
-    Left e -> error $ "bad parser: " <> show e
-    Right rules -> part2 rules
+  either (\e -> error $ "bad parser: " <> show e)
+         part2
+       $ parse parseRules fp input
 
 part1 rules = do 
   let dag = containedByDag rules
