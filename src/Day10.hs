@@ -38,15 +38,21 @@ part1 ns = sz1 * (sz3 + 1) -- add one size 3 gap of max to built in adapter
 -----------
 --PART 2 --
 -----------
+
+-- we work backwards through the sorted list of adapters, at each step keeping 
+-- track of the current 3 lowest joltage ones, and their respective path counts
+-- to the device. To calculate the path count of the next lowest adapter, we take
+-- the sum of the path counts of those adapters reachable by the new one.
+
 newtype PathCount = PC Int
--- list of 3 leftmost adaptors, and their respective numbers of paths to the end
+-- list of 3 leftmost adapters, and their respective numbers of paths to the end
 type JoltPaths = [(Int, PathCount)]
 
 
 toJoltPaths :: Int -> JoltPaths
 toJoltPaths n = [(n, PC 1)]
 
-
+--
 joltPathsAddLeft :: Int -> JoltPaths -> JoltPaths
 joltPathsAddLeft n jps = take 3 $ (n, PC newPaths) : jps
   where newPaths = sum [ pathCount | (m, PC pathCount) <- jps, m-n <=3 ]
