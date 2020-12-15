@@ -25,9 +25,23 @@ findWeakness preambleLen ns = (ns !) $ fromJust $ flip find [preambleLen..Vec.le
   let precedingN = Vec.slice (i-preambleLen) preambleLen ns
    in not $ any2AddTo (ns ! i) precedingN
 
+encryptionWeakness :: Int -> Vector Int -> Int
+encryptionWeakness sumTo ns =
+  let (lIx, rIx) = (0,1)
+      total = ns ! lIx + ns ! rIx
+      loop lIx rIx total = result where
+        result = case compare total sumTo of
+          EQ -> Vec.minimum slice + Vec.maximum slice
+          LT -> loop lIx (rIx+1) (total + ns ! (rIx+1))
+          GT -> loop (lIx+1) rIx (total - ns ! lIx)
+        slice = Vec.slice lIx (1+rIx-lIx) ns
+   in loop lIx rIx total
+
 doDay9 :: IO ()
 doDay9 = do
   -- let fp = "inputs/day9test.txt"
   let fp = "inputs/day9.txt"
   ns <- Vec.fromList . intList <$> readFile fp
-  print $ findWeakness 25 ns
+  let weakness = findWeakness 25 ns
+  print weakness
+  print $ encryptionWeakness weakness ns
