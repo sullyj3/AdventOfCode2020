@@ -45,19 +45,18 @@ initProgState sz = PS { progStateInstructIx = 0
 -- return the final acc value and termination status
 executeProg :: Program -> (Int, Termination)
 executeProg prog = (acc, term)
-  where (ret, finalState) = runState (progLoop prog) $ (initProgState (Seq.length prog), [])
-        (_, term) = ret
+  where (term, finalState) = runState (progLoop prog) $ (initProgState (Seq.length prog), [])
         (PS _ acc _, _) = finalState
 
 
 
 -- keep a list of the intruction indices visited for debugging
-progLoop :: Program -> State (ProgState,[Int]) ([Int], Termination)
+progLoop :: Program -> State (ProgState,[Int]) Termination
 progLoop prog = do
   (ps@(PS ix acc seen), ixs) <- get
-  if | ix == progLen                -> pure (ixs, ReadPastEnd)
-     | not . inRange 0 progLen $ ix -> pure (ixs, InvalidJump)
-     | Seq.index seen ix            -> pure (ixs, InfLoop)
+  if | ix == progLen                -> pure ReadPastEnd
+     | not . inRange 0 progLen $ ix -> pure InvalidJump
+     | Seq.index seen ix            -> pure InfLoop
      | otherwise                    -> put (runStep prog ps, ix:ixs) >> progLoop prog
   where progLen = Seq.length prog
         -- half open interval
