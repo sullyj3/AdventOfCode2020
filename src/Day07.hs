@@ -9,7 +9,7 @@ import qualified Text.Megaparsec.Char.Lexer as L
 
 import Data.Foldable (traverse_)
 import qualified Data.Map as M
-import           Data.Map (Map, (!))
+import           Data.Map (Map, (!), (!?))
 import qualified Data.Set as S
 import           Data.Set (Set)
 import           Data.Tuple (swap)
@@ -64,25 +64,33 @@ mustContain rules = foldr addrule mempty rules
 
 
 transitiveCountContents :: BagType -> Map BagType (Map BagType Int) -> Int
-transitiveCountContents = undefined
+transitiveCountContents ty ruleMap = trace ("transitiveCountContents " <> ty <> ": " <> show result) result
+  where result = case (ruleMap !? ty) of
+          Just contents -> countContents contents
+          -- if the key doesn't exist in the map, it doesn't need to contain anything
+          Nothing       -> 0
+
+        countContents :: Map BagType Int -> Int
+        countContents = sum . M.mapWithKey (\ty count -> count + count * transitiveCountContents ty ruleMap)
 
 
 doDay7 :: IO ()
 doDay7 = do
-  -- let fp = "inputs/day7test.txt"
+  -- let fp = "inputs/day7test2.txt"
   let fp = "inputs/day7.txt"
   input <- readFile fp
   case parse parseRules fp input of
     Left e -> error $ "bad parser: " <> show e
-    Right rules -> part1 rules
+    Right rules -> part2 rules
 
 part1 rules = do 
   let dag = containedByDag rules
   print . S.size $ canContain "shiny gold" dag
 
 part2 rules = do
-  let m = mustContain rules
-  putStrLn $ showMap m
+  let ruleMap = mustContain rules
+  putStrLn $ showMap ruleMap
+  print $ transitiveCountContents "shiny gold" ruleMap
 
 
 
