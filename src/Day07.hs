@@ -14,7 +14,6 @@ import qualified Data.Set as S
 import           Data.Set (Set)
 import           Data.Tuple (swap)
 
-import Debug.Trace (trace)
 
 data Rule = Rule { ruleBagType :: String
                  , ruleContents :: [(Int, String)]
@@ -63,14 +62,10 @@ mustContain rules = foldr addrule mempty rules
         toMap = M.fromList . map swap
 
 
+-- if the key doesn't exist in the map, it doesn't need to contain anything
 transitiveCountContents :: BagType -> Map BagType (Map BagType Int) -> Int
-transitiveCountContents ty ruleMap = trace ("transitiveCountContents " <> ty <> ": " <> show result) result
-  where result = case (ruleMap !? ty) of
-          Just contents -> countContents contents
-          -- if the key doesn't exist in the map, it doesn't need to contain anything
-          Nothing       -> 0
-
-        countContents :: Map BagType Int -> Int
+transitiveCountContents ty ruleMap = maybe 0 countContents (ruleMap !? ty)
+  where countContents :: Map BagType Int -> Int
         countContents = sum . M.mapWithKey (\ty count -> count + count * transitiveCountContents ty ruleMap)
 
 
@@ -89,7 +84,6 @@ part1 rules = do
 
 part2 rules = do
   let ruleMap = mustContain rules
-  putStrLn $ showMap ruleMap
   print $ transitiveCountContents "shiny gold" ruleMap
 
 
