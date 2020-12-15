@@ -30,19 +30,27 @@ parseInstruction s = case words s of
 parseProgram :: String -> Maybe Program
 parseProgram = traverse parseInstruction . Seq.fromList . lines
 
-accBeforeLoop :: Program -> Int
-accBeforeLoop program =
-  let initProgState = PS { progStateInstructIx = 0
-                         , progStateAcc = 0
-                         , progStateInstructSeen = Seq.replicate (length program) False}
 
-      loop :: State ProgState Int
-      loop = do
-        ps@(PS ix acc seen) <- get
-        if Seq.index seen ix
-        then pure acc
-        else modify (runStep program) >> loop
-   in evalState loop initProgState
+initProgState sz = PS { progStateInstructIx = 0
+                      , progStateAcc = 0
+                      , progStateInstructSeen = Seq.replicate sz False }
+
+
+accBeforeLoop :: Program -> Int
+accBeforeLoop program = evalState loop $ initProgState (Seq.length program)
+  where
+    loop :: State ProgState Int
+    loop = do
+      ps@(PS ix acc seen) <- get
+      if Seq.index seen ix
+      then pure acc
+      else modify (runStep program) >> loop
+
+
+traceInstructIx :: Program -> [Int]
+traceInstructIx = undefined
+
+
 
 runStep :: Program -> ProgState -> ProgState
 runStep prog (PS ix acc seen) = let
@@ -55,5 +63,11 @@ runStep prog (PS ix acc seen) = let
 doDay8 :: IO ()
 doDay8 = do
   let fp = "inputs/day8.txt"
-  Just program <- parseProgram <$> readFile fp
-  print $ accBeforeLoop program
+  Just prog <- parseProgram <$> readFile fp
+  part1 prog
+  where
+    part1 prog = do
+      print $ accBeforeLoop prog
+
+    part2 prog = do
+      undefined
