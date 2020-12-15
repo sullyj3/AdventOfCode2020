@@ -22,8 +22,8 @@ data Rule = Rule { ruleBagType :: String
 
 
 -- Based on the containment rules, build a dag representing the possible bag types
--- that each bag type could be directly contained bydirectly. represented as a Map
--- from bag type to set of types that can immediately contain it
+-- that each bag type could be directly contained by. Represented as a Map
+-- from bag type to set of types that can immediately contain it.
 containedByDag :: [Rule] -> Map String (Set String)
 containedByDag rules = foldr addrule mempty rules
   where addrule :: Rule -> Map String (Set String) -> Map String (Set String)
