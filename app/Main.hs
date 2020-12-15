@@ -32,7 +32,7 @@ import Day23
 import Day24
 import Day25
 
-currentDay = doDay6
+currentDay = doDay7
 
 main :: IO ()
 main = do
@@ -46,6 +46,7 @@ main = do
       Just 4 -> doDay4
       Just 5 -> doDay5
       Just 6 -> doDay5
+      Just 7 -> doDay5
       Just _ -> putStrLn "I haven't implemented that day yet!"
       Nothing -> putStrLn "That's not a number!"
     _ -> putStrLn "Please enter a day number!"
