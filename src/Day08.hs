@@ -27,7 +27,7 @@ parseInstruction s = case words s of
         parseArg ('+':n)   = readMaybe n
         parseArg n@('-':_) = readMaybe n
 
-parseProgram :: String -> Maybe (Seq Instruction)
+parseProgram :: String -> Maybe Program
 parseProgram = traverse parseInstruction . Seq.fromList . lines
 
 accBeforeLoop :: Program -> Int
