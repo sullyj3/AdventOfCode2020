@@ -32,7 +32,7 @@ import Day23
 import Day24
 import Day25
 
-currentDay = doDay10
+currentDay = doDay5
 
 main :: IO ()
 main = do

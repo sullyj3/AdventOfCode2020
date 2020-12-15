@@ -20,27 +20,18 @@ type Col = Int
 seatId :: Row -> Col -> SeatID
 seatId row col = row * 8 + col
 
-seatRow :: SeatID -> Row
-seatRow = (`div` 8)
-
-seatCol :: SeatID -> Col
-seatCol = (`mod` 8)
-
-getRow :: Row -> Set SeatID
-getRow r = S.map (+ (r*8)) $ S.fromList [0..7]
 
 planeRow :: Plane -> Row -> Set SeatID
 planeRow plane r = S.intersection (getRow r) plane
+  where getRow :: Row -> Set SeatID
+        getRow r = S.map (+ (r*8)) $ S.fromList [0..7]
+
 
 showSeat :: SeatID -> String
 showSeat s = printf "id: %d, row: %d, col: %d" s (seatRow s) (seatCol s)
-
-
-bitStringInt :: [Bool] -> Int
-bitStringInt bs = let oneZeroes = map (\b -> if b then 1 else 0) bs
-  in sum $ zipWith (\bit pow -> bit*(2^pow))
-                   (reverse $ oneZeroes)
-                   [0..]
+  where
+    seatRow = (`div` 8)
+    seatCol = (`mod` 8)
 
 
 parseBit :: String -> Maybe Bool
@@ -52,15 +43,19 @@ parseBit = \case
   _   -> Nothing
 
 
-parseBitString :: String -> Maybe BitString
-parseBitString = traverse (parseBit . (:[]))
-
-
 passToRowCol :: String -> (Int, Int)
 passToRowCol p = let (rowPath, colPath) = splitAt 7 p
                      (row, col) = ( bitStringInt . fromJust . parseBitString $ rowPath
                                   , bitStringInt . fromJust . parseBitString $ colPath )
                   in (row, col)
+  where parseBitString :: String -> Maybe BitString
+        parseBitString = traverse (parseBit . (:[]))
+
+        bitStringInt :: [Bool] -> Int
+        bitStringInt bs = let oneZeroes = map (\b -> if b then 1 else 0) bs
+          in sum $ zipWith (\bit pow -> bit*(2^pow))
+                           (reverse $ oneZeroes)
+                           [0..]
 
 doDay5 :: IO ()
 doDay5 = do
@@ -78,9 +73,7 @@ part2 plane = case S.toList matches of
   [myId] -> myId
   matches -> error $ "more than one match!\n" <> unlines (map showSeat matches)
   where
-    possibleRows = [0..127]
-    possibleCols = [0..7]
-    possibleIds = S.fromList [seatId r c | r <- possibleRows, c <- possibleCols]
+    possibleIds = S.fromList [seatId r c | r <- [0..127], c <- [0..7]]
     missingIds = possibleIds \\ plane
 
     matches = S.filter neighboursPresent missingIds
