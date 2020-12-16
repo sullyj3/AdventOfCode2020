@@ -3,16 +3,12 @@
 module Day11 where
 
 import Data.Maybe (mapMaybe)
-import Control.Monad
-import Data.Foldable
+import Control.Monad (guard)
+import Data.Foldable (find)
 import Data.Vector (Vector)
 import qualified Data.Vector as Vec
-import qualified Data.Set as S
-import           Data.Set (Set)
 import Control.Arrow ((&&&))
-import Lib
-import System.IO.Unsafe (unsafePerformIO)
-import Text.Printf (printf)
+import Lib (count)
 
 type Grid = Vector (Vector Char)
 
