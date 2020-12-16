@@ -20,15 +20,10 @@ height g = Vec.length g
 width  g = Vec.length (g Vec.! 0)
 
 
-dims :: Grid -> (Int, Int)
-dims = height &&& width
-
-
 (!) :: Grid -> (Int, Int) -> Char
 g ! (i,j) = (g Vec.! i) Vec.! j
 
 addVec (a,b) (c,d) = (a+c,b+d)
-
 
 
 runStep :: ((Int, Int) -> Grid -> Char) -> Grid -> Grid
@@ -51,9 +46,8 @@ adjacent g (i, j) = do
   dj <- [-1..1]
   guard $ (di,dj) /= (0,0)
   let pt = (i+di, j+dj)
-  guard $ inRange g pt
+  guard $ inside g pt
   pure $ g ! pt
-
 
 
 updateCellPart2 :: (Int, Int) -> Grid -> Char
@@ -78,7 +72,7 @@ rayCast start g dirVec =
                        -- index the grid at those points
                        $ map (g!)
                        -- stop when we get outside the grid
-                       $ takeWhile (inRange g)
+                       $ takeWhile (inside g)
                        -- list of points in the given direction,
                        -- excluding the starting point
                        $ tail $ iterate (addVec dirVec) start
@@ -90,9 +84,9 @@ runUntilNoChange stepper g | g' == g = g'
                            where g' = stepper g
 
 
-inRange :: Grid -> (Int, Int) -> Bool
-inRange g (i,j) = i >=0 && i < h && j >=0 && j < w
-  where (h,w) = dims g
+-- check if a point is within the grid
+inside :: Grid -> (Int, Int) -> Bool
+inside g (i,j) = i >= 0 && i < height g && j >= 0 && j < width g
 
 
 toGrid :: [[Char]] -> Grid
