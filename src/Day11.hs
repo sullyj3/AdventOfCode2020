@@ -51,7 +51,7 @@ adjacent g (i, j) = do
   dj <- [-1..1]
   guard $ (di,dj) /= (0,0)
   let pt = (i+di, j+dj)
-  guard $ inRange pt g
+  guard $ inRange g pt
   pure $ g ! pt
 
 
@@ -78,7 +78,7 @@ rayCast start g dirVec =
                        -- index the grid at those points
                        $ map (g!)
                        -- stop when we get outside the grid
-                       $ takeWhile (flip inRange g)
+                       $ takeWhile (inRange g)
                        -- list of points in the given direction,
                        -- excluding the starting point
                        $ tail $ iterate (addVec dirVec) start
@@ -90,8 +90,8 @@ runUntilNoChange stepper g | g' == g = g'
                            where g' = stepper g
 
 
-inRange :: (Int, Int) -> Grid -> Bool
-inRange (i,j) g = i >=0 && i < h && j >=0 && j < w
+inRange :: Grid -> (Int, Int) -> Bool
+inRange g (i,j) = i >=0 && i < h && j >=0 && j < w
   where (h,w) = dims g
 
 
