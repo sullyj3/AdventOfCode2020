@@ -2,7 +2,7 @@
 
 module Day11 where
 
-import Data.Maybe (catMaybes)
+import Data.Maybe (mapMaybe)
 import Control.Monad
 import Data.Foldable
 import Data.Vector (Vector)
@@ -19,26 +19,17 @@ type Grid = Vector (Vector Char)
 height g = Vec.length g
 width  g = Vec.length (g Vec.! 0)
 
+
+dims :: Grid -> (Int, Int)
+dims = height &&& width
+
+
 (!) :: Grid -> (Int, Int) -> Char
 g ! (i,j) = (g Vec.! i) Vec.! j
 
 addVec (a,b) (c,d) = (a+c,b+d)
 
-rayCast :: (Int, Int) -> (Int, Int) -> Grid -> Maybe Char
-rayCast dirVec start g = find (/='.')
-                       $ map (g!)
-                       $ takeWhile (flip inRange g)
-                       -- tail to exclude the starting point
-                       $ tail $ iterate (addVec dirVec) start
 
-visibleChairs :: (Int, Int) -> Grid -> [Char]
-visibleChairs pt g = catMaybes [rayCast dir pt g | dir <- dirs ]
-  where dirs = [ (1,0), (-1,0), (0,1), (0,-1),
-                 (1,1), (1,-1), (-1,1), (-1,-1)]
-
-
-dims :: Grid -> (Int, Int)
-dims = height &&& width
 
 runStep :: ((Int, Int) -> Grid -> Char) -> Grid -> Grid
 runStep updateCell g = toGrid [ [ updateCell (i,j) g | j <- [0..width g-1]]
@@ -54,6 +45,17 @@ updateCellPart1 pt g = case g ! pt of
   '.' -> '.'
   where adjs = adjacent g pt
 
+adjacent :: Grid -> (Int, Int) -> [Char]
+adjacent g (i, j) = do
+  di <- [-1..1]
+  dj <- [-1..1]
+  guard $ (di,dj) /= (0,0)
+  let pt = (i+di, j+dj)
+  guard $ inRange pt g
+  pure $ g ! pt
+
+
+
 updateCellPart2 :: (Int, Int) -> Grid -> Char
 updateCellPart2 pt g = case g ! pt of
   'L' | '#' `notElem` visibles     -> '#'
@@ -63,20 +65,29 @@ updateCellPart2 pt g = case g ! pt of
   '.' -> '.'
   where visibles = visibleChairs pt g
 
+visibleChairs :: (Int, Int) -> Grid -> [Char]
+visibleChairs pt g = mapMaybe (rayCast pt g) dirs
+  where dirs = [ (1,0), (-1,0), (0,1), (0,-1),
+                 (1,1), (1,-1), (-1,1), (-1,-1)]
+
+-- Just chair character if a chair is visible in that direction, otherwise Nothing
+rayCast :: (Int, Int) -> Grid -> (Int, Int) -> Maybe Char
+rayCast start g dirVec =
+                       -- get the first nonempty cell, if present
+                         find (/='.')
+                       -- index the grid at those points
+                       $ map (g!)
+                       -- stop when we get outside the grid
+                       $ takeWhile (flip inRange g)
+                       -- list of points in the given direction,
+                       -- excluding the starting point
+                       $ tail $ iterate (addVec dirVec) start
+
+
 runUntilNoChange :: (Grid -> Grid) -> Grid -> Grid
 runUntilNoChange stepper g | g' == g = g'
                            | otherwise = runUntilNoChange stepper g'
                            where g' = stepper g
-
-
-adjacent :: Grid -> (Int, Int) -> [Char]
-adjacent g (i, j) = do
-  di <- [-1..1]
-  dj <- [-1..1]
-  guard $ (di,dj) /= (0,0)
-  let pt = (i+di, j+dj)
-  guard $ inRange pt g
-  pure $ g ! pt
 
 
 inRange :: (Int, Int) -> Grid -> Bool
