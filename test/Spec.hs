@@ -1,2 +1,6 @@
+import qualified TestDay11
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+  putStrLn "Running test suite"
+  TestDay11.main

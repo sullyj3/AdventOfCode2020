@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3f5deda688b5a6a7aea49ded60d03ed30a769fd514b12460dd683a0df7ec7d53
+-- hash: 171e0adb8d65d4ccf36171ff665216603e83bbeea39ef1f68408579c99bb5dc4
 
 name:           AdventOfCode2020
 version:        0.1.0.0
@@ -61,6 +61,7 @@ library
       base >=4.7 && <5
     , containers
     , extra
+    , hspec
     , megaparsec
     , mtl
     , semigroupoids
@@ -80,6 +81,7 @@ executable AdventOfCode2020-exe
     , base >=4.7 && <5
     , containers
     , extra
+    , hspec
     , megaparsec
     , mtl
     , semigroupoids
@@ -91,6 +93,7 @@ test-suite AdventOfCode2020-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      TestDay11
       Paths_AdventOfCode2020
   hs-source-dirs:
       test
@@ -100,6 +103,7 @@ test-suite AdventOfCode2020-test
     , base >=4.7 && <5
     , containers
     , extra
+    , hspec
     , megaparsec
     , mtl
     , semigroupoids
