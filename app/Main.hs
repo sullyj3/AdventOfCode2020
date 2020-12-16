@@ -1,8 +1,5 @@
 module Main where
 
-import Text.Printf (printf)
-import Data.Foldable (traverse_, for_)
-import System.IO
 import System.Environment (getArgs)
 import Text.Read (readMaybe)
 
@@ -18,21 +15,21 @@ import Day09
 import Day10
 import Day11
 import Day12
-import Day13
-import Day14
-import Day15
-import Day16
-import Day17
-import Day18
-import Day19
-import Day20
-import Day21
-import Day22
-import Day23
-import Day24
-import Day25
+-- import Day13
+-- import Day14
+-- import Day15
+-- import Day16
+-- import Day17
+-- import Day18
+-- import Day19
+-- import Day20
+-- import Day21
+-- import Day22
+-- import Day23
+-- import Day24
+-- import Day25
 
-currentDay = doDay11
+currentDay = doDay12
 
 main :: IO ()
 main = do
@@ -51,6 +48,7 @@ main = do
       Just 9 -> doDay9
       Just 10 -> doDay10
       Just 11 -> doDay11
+      Just 12 -> doDay12
       Just _ -> putStrLn "I haven't implemented that day yet!"
       Nothing -> putStrLn "That's not a number!"
     _ -> putStrLn "Please enter a day number!"

@@ -6,7 +6,6 @@ import Data.Void
 
 import Text.Megaparsec
 import qualified Text.Megaparsec.Char as C
-import Data.Maybe (catMaybes)
 
 
 data Policy = Policy { charcountMin :: Int

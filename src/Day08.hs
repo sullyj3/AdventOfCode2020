@@ -9,7 +9,6 @@ import Text.Read (readMaybe)
 import           Control.Monad.State
 import           Data.Sequence (Seq)
 import qualified Data.Sequence as Seq
-import Data.Foldable
 
 data Instruction = ACC Int | NOP Int | JMP Int
   deriving (Show)

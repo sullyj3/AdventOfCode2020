@@ -1,8 +1,4 @@
-module Lib
-    ( intList
-    , (.:)
-    , count
-    ) where
+module Lib where
 
 import Data.List ( sort
                  , nub)
@@ -11,6 +7,7 @@ import Data.List ( sort
 intList :: String -> [Int]
 intList = map read . lines
 
+addVec (a,b) (c,d) = (a+c,b+d)
 
 (.:) = (.) . (.)
 

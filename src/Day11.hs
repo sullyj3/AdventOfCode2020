@@ -7,8 +7,7 @@ import Control.Monad (guard)
 import Data.Foldable (find)
 import Data.Vector (Vector)
 import qualified Data.Vector as Vec
-import Control.Arrow ((&&&))
-import Lib (count)
+import Lib (count, addVec)
 
 type Grid = Vector (Vector Char)
 
@@ -19,7 +18,6 @@ width  g = Vec.length (g Vec.! 0)
 (!) :: Grid -> (Int, Int) -> Char
 g ! (i,j) = (g Vec.! i) Vec.! j
 
-addVec (a,b) (c,d) = (a+c,b+d)
 
 
 runStep :: ((Int, Int) -> Grid -> Char) -> Grid -> Grid

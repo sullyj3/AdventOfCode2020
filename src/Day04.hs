@@ -13,17 +13,13 @@ import qualified Text.Megaparsec.Error as E
 
 import Data.Void
 
-import Control.Applicative ((<|>))
 import Control.Monad
 import Data.Foldable
 
 import Data.Char (isSpace)
 import Data.Either (partitionEithers)
 import Data.List.Split (splitOn)
-import           Data.List ( foldl'
-                           , intercalate
-                           , isPrefixOf
-                           , intersect
+import           Data.List ( intersect
                            , sort)
 import Lib
 

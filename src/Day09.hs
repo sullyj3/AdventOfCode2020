@@ -10,7 +10,6 @@ import qualified Data.Vector as Vec
 import           Data.Vector (Vector, (!))
 
 import           Lib
-import           Debug.Trace
 
 any2AddTo :: Int -> Vector Int -> Bool
 any2AddTo n vec
