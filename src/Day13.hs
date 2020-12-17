@@ -15,6 +15,7 @@ import           Text.Read (readMaybe)
 -- import           Data.Map (Map, (!?))
 import           Data.List.Split (splitOn)
 -- import           Control.Arrow ((>>>))
+import           Debug.Trace
 
 import Lib
 
@@ -73,11 +74,15 @@ data TimeSlot = Unconstrained | Bus ID
 type Schedule = [TimeSlot]
 
 matchesSchedule :: Schedule -> Int -> Bool
-matchesSchedule sched t0 = and $ zipWith checkMatch sched [0..]
+matchesSchedule sched t0 = trace ("checking time: "<> show t0) matches
   where
   checkMatch :: TimeSlot -> Int -> Bool
   checkMatch Unconstrained i = True
-  checkMatch (Bus busId)   i = firstArrivalAfter t0 busId == t0 + i
+  checkMatch (Bus busId)   i = busId `arrivesAt` (t0 + i)
+
+  arrivesAt busId t = t `mod` busId == 0
+
+  matches = and $ zipWith checkMatch sched [0..]
 
 part2 :: Schedule -> Int
 part2 sched = t0
@@ -92,7 +97,7 @@ doDay13 :: IO ()
 doDay13 = do
   let testFp = "inputs/day13test.txt"
   let fp     = "inputs/day13.txt"
-  input <- lines <$> readFile fp
+  input <- lines <$> readFile testFp
 
   let Just (earliest, busIds) = parsePart1 input
   print $ part1 earliest busIds
