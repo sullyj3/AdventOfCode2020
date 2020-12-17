@@ -77,6 +77,9 @@ applyDirection2 (ShipState2 pos way) = \case
   Forward           n -> ShipState2 (pos `addVec` scale n way) way
   Turn              n -> ShipState2 pos (applyN n rotate90CCwAround0 way)
 
+part2 :: [Direction] -> Int
+part2 directions = manhattanFrom0 finalPos
+  where ShipState2 finalPos _ = foldl' applyDirection2 initialState2 directions
 
 doDay12 :: IO ()
 doDay12 = do
@@ -84,4 +87,5 @@ doDay12 = do
   input <- readFile fp
   let Just instructions = parseDirections input
   print $ part1 instructions
+  print $ part2 instructions
 
