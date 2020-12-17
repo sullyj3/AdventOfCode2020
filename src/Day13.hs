@@ -5,7 +5,7 @@ module Day13 where
 
 -- delete unneeded stuff
 -- import           Data.Maybe (mapMaybe)
--- import           Data.Foldable (foldl', find)
+import           Data.Foldable (find)
 -- import           Data.List (sort)
 import           Text.Read (readMaybe)
 -- import           Text.Printf         (printf)
@@ -54,7 +54,9 @@ nextBusAfter t = minimumOn fst
 
 
 firstArrivalAfter :: Int -> ID -> Int
-firstArrivalAfter t busId = busId + (busId * (t `div` busId))
+firstArrivalAfter t busId 
+  | t `mod` busId == 0 = t
+  | otherwise = busId + (busId * (t `div` busId))
 
 
 part1 :: Int -> [ID] -> Int
@@ -70,8 +72,17 @@ data TimeSlot = Unconstrained | Bus ID
 -- maybe use array? not sure
 type Schedule = [TimeSlot]
 
+matchesSchedule :: Schedule -> Int -> Bool
+matchesSchedule sched t0 = and $ zipWith checkMatch sched [0..]
+  where
+  checkMatch :: TimeSlot -> Int -> Bool
+  checkMatch Unconstrained i = True
+  checkMatch (Bus busId)   i = firstArrivalAfter t0 busId == t0 + i
+
 part2 :: Schedule -> Int
-part2 = undefined
+part2 sched = t0
+  where Bus firstBus = head sched
+        Just t0 = find (matchesSchedule sched) [firstBus, 2*firstBus ..]
 
 --------------------------
 ---------- IO ------------
