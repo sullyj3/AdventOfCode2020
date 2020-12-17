@@ -91,7 +91,7 @@ part2 directions = manhattanFrom0 finalPos
   where ShipState2 finalPos _ = foldl' applyDirection2 initialState2 directions
 
 --------------------------
--------- IO ----------
+---------- IO ------------
 --------------------------
 
 doDay12 :: IO ()
