@@ -42,6 +42,11 @@ parse = lines >>> \case
 -------- Part 1 ----------
 --------------------------
 
+-- given a time and list of busses, return the
+-- (next departure time, bus id of that departure)
+nextBusAfter :: Int -> [ID] -> (Int, ID)
+nextBusAfter n ids = undefined
+
 part1 :: Something -> SomethingElse
 part1 = undefined
 
