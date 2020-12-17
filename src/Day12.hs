@@ -10,19 +10,15 @@ import Lib
 import Cardinal
 
 
-data ShipState = ShipState Cardinal (Int, Int)
-  deriving (Show, Eq)
-
--- waypoint position is relative to ship
-data ShipState2 = ShipState2 { position :: (Int, Int)
-                             , wayPoint :: (Int, Int) }
-  deriving (Show, Eq)
-
 data Direction = Absolute Cardinal Int
                | Forward Int
                | Turn Int -- we normalize turns to a composition of n ccw turns by 90
   deriving (Show, Eq)
 
+
+--------------------------
+-------- Parsing ---------
+--------------------------
 
 -- parse a direction string.
 -- we assume turns are only multiples of 90
@@ -41,14 +37,21 @@ parseDirection = \case
 parseDirections :: String -> Maybe [Direction]
 parseDirections = traverse parseDirection . lines
 
+--------------------------
+-------- Part 1 ----------
+--------------------------
 
-applyDirection :: ShipState -> Direction -> ShipState
-applyDirection (ShipState heading pos) = \case
-  Absolute cardinal n -> ShipState heading (pos `addVec` (scale n $ unit cardinal))
-  Forward           n -> ShipState heading (pos `addVec` (scale n $ unit heading))
+data ShipState1 = ShipState1 Cardinal (Int, Int)
+  deriving (Show, Eq)
+
+
+applyDirection :: ShipState1 -> Direction -> ShipState1
+applyDirection (ShipState1 heading pos) = \case
+  Absolute cardinal n -> ShipState1 heading (pos `addVec` (scale n $ unit cardinal))
+  Forward           n -> ShipState1 heading (pos `addVec` (scale n $ unit heading))
   Turn              n ->
     let heading' = applyN n turn90CCW heading in
-        ShipState heading' pos
+        ShipState1 heading' pos
 
 
 manhattanFrom0 :: (Int, Int) -> Int
@@ -56,12 +59,18 @@ manhattanFrom0 (x,y) = abs x + abs y
 
 part1 :: [Direction] -> Int
 part1 instructions = manhattanFrom0 finalPos
-  where initialState = ShipState E (0,0)
-        ShipState _ finalPos = foldl' applyDirection initialState instructions
+  where initialState = ShipState1 E (0,0)
+        ShipState1 _ finalPos = foldl' applyDirection initialState instructions
 
 --------------------------
 -------- Part 2 ----------
 --------------------------
+
+-- waypoint position is relative to ship
+data ShipState2 = ShipState2 { position :: (Int, Int)
+                             , wayPoint :: (Int, Int) }
+  deriving (Show, Eq)
+
 initialState2 :: ShipState2
 initialState2 = ShipState2 (0,0) (10,1)
 
@@ -80,6 +89,10 @@ applyDirection2 (ShipState2 pos way) = \case
 part2 :: [Direction] -> Int
 part2 directions = manhattanFrom0 finalPos
   where ShipState2 finalPos _ = foldl' applyDirection2 initialState2 directions
+
+--------------------------
+-------- IO ----------
+--------------------------
 
 doDay12 :: IO ()
 doDay12 = do
