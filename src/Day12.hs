@@ -58,8 +58,8 @@ unit = \case
 
 applyDirection :: ShipState -> Direction -> ShipState
 applyDirection (ShipState heading pos) = \case
-  Absolute cardinal n -> ShipState heading (addVec pos (scale n $ unit cardinal))
-  Forward           n -> ShipState heading (addVec pos (scale n $ unit heading))
+  Absolute cardinal n -> ShipState heading (pos `addVec` (scale n $ unit cardinal))
+  Forward           n -> ShipState heading (pos `addVec` (scale n $ unit heading))
   Turn              n ->
     let heading' = appEndo (stimes n $ Endo turnCCW) heading in
         ShipState heading' pos
