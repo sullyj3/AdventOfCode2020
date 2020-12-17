@@ -14,29 +14,33 @@ import           Text.Read (readMaybe)
 -- import qualified Data.Map as M
 -- import           Data.Map (Map, (!?))
 import           Data.List.Split (splitOn)
-import           Control.Arrow ((>>>))
+-- import           Control.Arrow ((>>>))
 
 import Lib
 
 
 type ID = Int
-data Something = Something
-  deriving (Show, Eq)
-
-type SomethingElse = ()
-
 
 --------------------------
 -------- Parsing ---------
 --------------------------
 
 -- return the (earliest timestamp, bus ids)
-parse :: String -> Maybe (Int, [ID])
-parse = lines >>> \case
+parsePart1 :: [String] -> Maybe (Int, [ID])
+parsePart1 = \case
   [l1,l2] -> do earliest <- readMaybe l1
                 busIds <- traverse readMaybe . filter (/="x") . splitOn "," $ l2
                 Just (earliest, busIds)
   _ -> Nothing
+
+parsePart2 :: [String] -> Maybe Schedule
+parsePart2 = \case
+  [_,l2] -> traverse parseTimeSlot . splitOn "," $ l2
+  _ -> Nothing
+  where parseTimeSlot :: String -> Maybe TimeSlot
+        parseTimeSlot = \case
+          "x" -> Just Unconstrained
+          n   -> Bus <$> readMaybe n
 
 --------------------------
 -------- Part 1 ----------
@@ -62,7 +66,11 @@ part1 t busIds = waitTime * nextBus
 -------- Part 2 ----------
 --------------------------
 
-part2 :: Something -> SomethingElse
+data TimeSlot = Unconstrained | Bus ID
+-- maybe use array? not sure
+type Schedule = [TimeSlot]
+
+part2 :: Schedule -> Int
 part2 = undefined
 
 --------------------------
@@ -73,9 +81,11 @@ doDay13 :: IO ()
 doDay13 = do
   let testFp = "inputs/day13test.txt"
   let fp     = "inputs/day13.txt"
-  input <- readFile fp
-  let Just (earliest, busIds) = parse input
+  input <- lines <$> readFile fp
 
+  let Just (earliest, busIds) = parsePart1 input
   print $ part1 earliest busIds
-  --print $ part2 d
+
+  let Just schedule = parsePart2 input
+  print $ part2 schedule
 
