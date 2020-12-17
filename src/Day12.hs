@@ -5,7 +5,6 @@ module Day12 (
   doDay12
   ) where
 
-import Data.Semigroup (Endo(..), appEndo, stimes)
 import Data.Foldable (foldl')
 import Text.Read (readMaybe)
 
@@ -61,7 +60,7 @@ applyDirection (ShipState heading pos) = \case
   Absolute cardinal n -> ShipState heading (pos `addVec` (scale n $ unit cardinal))
   Forward           n -> ShipState heading (pos `addVec` (scale n $ unit heading))
   Turn              n ->
-    let heading' = appEndo (stimes n $ Endo turnCCW) heading in
+    let heading' = applyN n turnCCW heading in
         ShipState heading' pos
 
 
