@@ -9,9 +9,8 @@ import Data.Foldable (foldl')
 import Text.Read (readMaybe)
 
 import Lib
+import Cardinal
 
-data Cardinal = N | S | E | W
-  deriving (Show, Eq)
 
 data ShipState = ShipState Cardinal (Int, Int)
   deriving (Show, Eq)
@@ -39,27 +38,13 @@ parseDirection = \case
 parseDirections :: String -> Maybe [Direction]
 parseDirections = traverse parseDirection . lines
 
-turnCCW :: Cardinal -> Cardinal
-turnCCW = \case
-  N -> W
-  W -> S
-  S -> E
-  E -> N
-
-
-unit :: Cardinal -> (Int, Int)
-unit = \case
-  N -> ( 0, 1)
-  S -> ( 0,-1)
-  E -> ( 1, 0)
-  W -> (-1, 0)
 
 applyDirection :: ShipState -> Direction -> ShipState
 applyDirection (ShipState heading pos) = \case
   Absolute cardinal n -> ShipState heading (pos `addVec` (scale n $ unit cardinal))
   Forward           n -> ShipState heading (pos `addVec` (scale n $ unit heading))
   Turn              n ->
-    let heading' = applyN n turnCCW heading in
+    let heading' = applyN n turn90CCW heading in
         ShipState heading' pos
 
 
