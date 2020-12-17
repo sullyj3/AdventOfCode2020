@@ -1,6 +1,6 @@
 {-# LANGUAGE BlockArguments #-}
 
-module TestDay11 where
+module Day11Spec where
 
 
 import Test.Hspec
@@ -9,8 +9,7 @@ import Test.Hspec
 import Data.List (intersperse)
 import Day11
 
-main :: IO ()
-main = hspec $ do
+spec = do
   describe "updateCellPart2" $ do
     let initial = toGrid [
             "L.LL.LL.LL"

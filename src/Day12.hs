@@ -1,9 +1,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE BlockArguments #-}
-module Day12 (
-  doDay12
-  ) where
+module Day12 where
 
 import Data.Foldable (foldl')
 import Text.Read (readMaybe)
@@ -14,6 +12,10 @@ import Cardinal
 
 data ShipState = ShipState Cardinal (Int, Int)
   deriving (Show, Eq)
+
+-- waypoint position is relative to ship
+data ShipState2 = ShipState2 { position :: (Int, Int)
+                             , wayPoint :: (Int, Int) }
 
 data Direction = Absolute Cardinal Int
                | Forward Int
@@ -55,6 +57,14 @@ part1 :: [Direction] -> Int
 part1 instructions = manhattanFrom0 finalPos
   where initialState = ShipState E (0,0)
         ShipState _ finalPos = foldl' applyDirection initialState instructions
+
+--------------------------
+-------- Part 2 ----------
+--------------------------
+
+rotateAround0 :: (Int, Int) -> (Int, Int)
+rotateAround0 (x,y) = (0,0)
+
 
 
 doDay12 :: IO ()
