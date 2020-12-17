@@ -2,7 +2,9 @@ module Lib where
 
 import Data.List ( sort
                  , nub)
+import Data.Foldable (minimumBy)
 import Data.Semigroup (Endo(..), appEndo, stimes)
+import Data.Ord (comparing)
 
 -- warning - partial
 intList :: String -> [Int]
@@ -20,3 +22,8 @@ allDistinct xs = (length . nub . sort) xs == (length . sort) xs
 
 applyN :: Int -> (a -> a) -> (a -> a)
 applyN n = appEndo . stimes n . Endo
+
+minimumOn f = minimumBy (comparing f)
+
+toFst f x = (f x, x)
+toSnd f x = (x, f x)

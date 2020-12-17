@@ -16,7 +16,7 @@ import           Text.Read (readMaybe)
 import           Data.List.Split (splitOn)
 import           Control.Arrow ((>>>))
 
---import Lib
+import Lib
 
 
 type ID = Int
@@ -45,10 +45,18 @@ parse = lines >>> \case
 -- given a time and list of busses, return the
 -- (next departure time, bus id of that departure)
 nextBusAfter :: Int -> [ID] -> (Int, ID)
-nextBusAfter n ids = undefined
+nextBusAfter t = minimumOn fst
+               . map (toFst $ firstArrivalAfter t)
 
-part1 :: Something -> SomethingElse
-part1 = undefined
+
+firstArrivalAfter :: Int -> ID -> Int
+firstArrivalAfter t busId = busId + (busId * (t `div` busId))
+
+
+part1 :: Int -> [ID] -> Int
+part1 t busIds = waitTime * nextBus
+  where (nextDeparture, nextBus) = nextBusAfter t busIds
+        waitTime = nextDeparture - t
 
 --------------------------
 -------- Part 2 ----------
@@ -68,7 +76,6 @@ doDay13 = do
   input <- readFile fp
   let Just (earliest, busIds) = parse input
 
-  print (earliest, busIds)
-  --print $ part1 d
+  print $ part1 earliest busIds
   --print $ part2 d
 
