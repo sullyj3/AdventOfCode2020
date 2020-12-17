@@ -8,7 +8,7 @@ module Day12 (
 import Data.Foldable (foldl')
 import Text.Read (readMaybe)
 
-import Lib (addVec)
+import Lib
 
 data Cardinal = N | S | E | W
   deriving (Show, Eq)
@@ -46,7 +46,6 @@ turnCCW = \case
   S -> E
   E -> N
 
-scale n (a,b) = (n*a,n*b)
 
 unit :: Cardinal -> (Int, Int)
 unit = \case

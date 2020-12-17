@@ -9,6 +9,7 @@ intList :: String -> [Int]
 intList = map read . lines
 
 addVec (a,b) (c,d) = (a+c,b+d)
+scale n (a,b) = (n*a,n*b)
 
 (.:) = (.) . (.)
 
