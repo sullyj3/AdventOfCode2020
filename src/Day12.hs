@@ -72,7 +72,10 @@ rotate90CCwAround0 :: (Int, Int) -> (Int, Int)
 rotate90CCwAround0 (x,y) = (-y, x)
 
 applyDirection2 :: ShipState2 -> Direction -> ShipState2
-applyDirection2 ss d = ss
+applyDirection2 (ShipState2 pos way) = \case
+  Absolute cardinal n -> ShipState2 pos (way `addVec` (scale n $ unit cardinal))
+  Forward           n -> ShipState2 (pos `addVec` scale n way) way
+  Turn              n -> ShipState2 pos (applyN n rotate90CCwAround0 way)
 
 
 doDay12 :: IO ()
