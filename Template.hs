@@ -20,12 +20,14 @@ import Lib
 data Something = Something
   deriving (Show, Eq)
 
+type SomethingElse = ()
+
 
 --------------------------
 -------- Parsing ---------
 --------------------------
 
-parse :: String -> Something
+parse :: String -> Maybe Something
 parse = undefined
 
 --------------------------
@@ -50,6 +52,7 @@ doDayn :: IO ()
 doDayn = do
   let testFp = "inputs/dayntest.txt"
   let fp     = "inputs/dayn.txt"
+  error "not yet implemented"
   input <- readFile fp
   let Just d = parse input
   print $ part1 d
