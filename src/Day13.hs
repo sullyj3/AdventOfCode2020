@@ -7,16 +7,19 @@ module Day13 where
 -- import           Data.Maybe (mapMaybe)
 -- import           Data.Foldable (foldl', find)
 -- import           Data.List (sort)
--- import           Text.Read (readMaybe)
+import           Text.Read (readMaybe)
 -- import           Text.Printf         (printf)
 -- import qualified Data.Set            as S
 -- import           Data.Set            (Set, (\\))
 -- import qualified Data.Map as M
 -- import           Data.Map (Map, (!?))
+import           Data.List.Split (splitOn)
+import           Control.Arrow ((>>>))
 
-import Lib
+--import Lib
 
 
+type ID = Int
 data Something = Something
   deriving (Show, Eq)
 
@@ -27,8 +30,13 @@ type SomethingElse = ()
 -------- Parsing ---------
 --------------------------
 
-parse :: String -> Maybe Something
-parse = undefined
+-- return the (earliest timestamp, bus ids)
+parse :: String -> Maybe (Int, [ID])
+parse = lines >>> \case
+  [l1,l2] -> do earliest <- readMaybe l1
+                busIds <- traverse readMaybe . filter (/="x") . splitOn "," $ l2
+                Just (earliest, busIds)
+  _ -> Nothing
 
 --------------------------
 -------- Part 1 ----------
@@ -50,11 +58,12 @@ part2 = undefined
 
 doDay13 :: IO ()
 doDay13 = do
-  let testFp = "inputs/dayntest.txt"
-  let fp     = "inputs/dayn.txt"
-  error "not yet implemented"
+  let testFp = "inputs/day13test.txt"
+  let fp     = "inputs/day13.txt"
   input <- readFile fp
-  let Just d = parse input
-  print $ part1 d
-  print $ part2 d
+  let Just (earliest, busIds) = parse input
+
+  print (earliest, busIds)
+  --print $ part1 d
+  --print $ part2 d
 
