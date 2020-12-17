@@ -16,6 +16,7 @@ data ShipState = ShipState Cardinal (Int, Int)
 -- waypoint position is relative to ship
 data ShipState2 = ShipState2 { position :: (Int, Int)
                              , wayPoint :: (Int, Int) }
+  deriving (Show, Eq)
 
 data Direction = Absolute Cardinal Int
                | Forward Int
@@ -61,10 +62,17 @@ part1 instructions = manhattanFrom0 finalPos
 --------------------------
 -------- Part 2 ----------
 --------------------------
+initialState2 :: ShipState2
+initialState2 = ShipState2 (0,0) (10,1)
 
-rotateAround0 :: (Int, Int) -> (Int, Int)
-rotateAround0 (x,y) = (0,0)
+-- Multiply by the rotation matrix:
+-- (0,-1)
+-- (1, 0)
+rotate90CCwAround0 :: (Int, Int) -> (Int, Int)
+rotate90CCwAround0 (x,y) = (-y, x)
 
+applyDirection2 :: ShipState2 -> Direction -> ShipState2
+applyDirection2 ss d = ss
 
 
 doDay12 :: IO ()
