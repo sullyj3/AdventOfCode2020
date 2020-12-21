@@ -5,9 +5,6 @@ import Data.List ( sort
 import Data.Foldable (minimumBy)
 import Data.Semigroup (Endo(..), appEndo, stimes)
 import Data.Ord (comparing)
-import Data.Char  (digitToInt)
-import Data.Maybe (listToMaybe)
-import Numeric    (readInt)
 
 -- warning - partial
 intList :: String -> [Int]

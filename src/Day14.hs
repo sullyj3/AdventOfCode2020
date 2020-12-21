@@ -150,11 +150,11 @@ executeCmd2 (ProgState2 mask mem) = \case
 doDay14 :: IO ()
 doDay14 = do
   -- let fp = "inputs/day14test.txt"
-  let fp = "inputs/day14test2.txt"
-  -- let fp     = "inputs/day14.txt"
+  -- let fp = "inputs/day14test2.txt"
+  let fp     = "inputs/day14.txt"
   input <- readFile fp
   -- parseTest parseProg input
   let Right prog = parse parseProg fp input
-  print $ part1 prog
-  -- print $ part2 prog
+  -- print $ part1 prog
+  print $ part2 prog
 
