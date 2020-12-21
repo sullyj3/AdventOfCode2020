@@ -4,8 +4,9 @@
 module Day13 where
 
 -- delete unneeded stuff
--- import           Data.Maybe (mapMaybe)
-import           Data.Foldable (find)
+import           Data.Maybe (mapMaybe)
+-- import           Data.Foldable (find)
+-- import           Data.Function (fix)
 -- import           Data.List (sort)
 import           Text.Read (readMaybe)
 -- import           Text.Printf         (printf)
@@ -15,9 +16,10 @@ import           Text.Read (readMaybe)
 -- import           Data.Map (Map, (!?))
 import           Data.List.Split (splitOn)
 -- import           Control.Arrow ((>>>))
-import           Debug.Trace
+-- import           Debug.Trace
 
 import Lib
+import ChineseRemainder
 
 
 type ID = Int
@@ -34,14 +36,14 @@ parsePart1 = \case
                 Just (earliest, busIds)
   _ -> Nothing
 
-parsePart2 :: [String] -> Maybe Schedule
+parsePart2 :: [String] -> Maybe [(Integer, Integer)]
 parsePart2 = \case
-  [_,l2] -> traverse parseTimeSlot . splitOn "," $ l2
+  [_,l2] -> Just $ mapMaybe parseTimeSlot . zip [0..] . splitOn "," $ l2
   _ -> Nothing
-  where parseTimeSlot :: String -> Maybe TimeSlot
+  where parseTimeSlot :: (Integer, String) -> Maybe (Integer, Integer)
         parseTimeSlot = \case
-          "x" -> Just Unconstrained
-          n   -> Bus <$> readMaybe n
+          (_,"x") -> Nothing
+          (i, n)  -> (,) i <$> readMaybe n
 
 --------------------------
 -------- Part 1 ----------
@@ -69,25 +71,13 @@ part1 t busIds = waitTime * nextBus
 -------- Part 2 ----------
 --------------------------
 
-data TimeSlot = Unconstrained | Bus ID
--- maybe use array? not sure
-type Schedule = [TimeSlot]
+part2 :: [(Integer, Integer)] -> Integer
+part2 input = t0
+  where (rems, mods) =
+          unzip $ map (\(offset, modulus) -> ((modulus-offset) `mod` modulus, modulus))
+                      input
+        Right t0 = chineseRemainder rems mods
 
-matchesSchedule :: Schedule -> Int -> Bool
-matchesSchedule sched t0 = trace ("checking time: "<> show t0) matches
-  where
-  checkMatch :: TimeSlot -> Int -> Bool
-  checkMatch Unconstrained i = True
-  checkMatch (Bus busId)   i = busId `arrivesAt` (t0 + i)
-
-  arrivesAt busId t = t `mod` busId == 0
-
-  matches = and $ zipWith checkMatch sched [0..]
-
-part2 :: Schedule -> Int
-part2 sched = t0
-  where Bus firstBus = head sched
-        Just t0 = find (matchesSchedule sched) [firstBus, 2*firstBus ..]
 
 --------------------------
 ---------- IO ------------
@@ -97,7 +87,7 @@ doDay13 :: IO ()
 doDay13 = do
   let testFp = "inputs/day13test.txt"
   let fp     = "inputs/day13.txt"
-  input <- lines <$> readFile testFp
+  input <- lines <$> readFile fp
 
   let Just (earliest, busIds) = parsePart1 input
   print $ part1 earliest busIds
