@@ -1,3 +1,5 @@
+-- note: looks like the fastest solutions just use an unboxed array (eg massiv)
+
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiWayIf #-}
