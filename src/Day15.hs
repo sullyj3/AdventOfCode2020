@@ -41,19 +41,15 @@ theSequence initial = initial ++ unfoldr next initialState
                                 (toInteger $ length initial)
 
         next :: SeqState -> Maybe (Integer, SeqState)
-        next (SeqState {..}) = case ssLastSeen !? ssLastN of
-          Nothing -> let newVal = 0
-                         newState = SeqState (M.insert ssLastN ssLastTurn ssLastSeen)
-                                             newVal
-                                             currTurn
-                      in Just (newVal, newState)
-          Just lastSeen ->
-                     let newVal = (ssLastTurn - lastSeen)
-                         newState = SeqState (M.insert ssLastN ssLastTurn ssLastSeen)
-                                             newVal
-                                             currTurn
-                      in Just (newVal, newState)
+        next ss@(SeqState {..}) = case ssLastSeen !? ssLastN of
+          Nothing       -> let newVal = 0 
+                            in Just (newVal, newState newVal ss)
+          Just lastSeen -> let newVal = (ssLastTurn - lastSeen)
+                            in Just (newVal, newState newVal ss)
           where currTurn = ssLastTurn + 1
+                newState newVal (SeqState {..}) = SeqState (M.insert ssLastN ssLastTurn ssLastSeen)
+                                                           newVal
+                                                           currTurn
 
           
 
