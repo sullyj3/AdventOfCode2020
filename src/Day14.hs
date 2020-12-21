@@ -7,6 +7,7 @@ module Day14 where
 -- import           Data.Maybe (mapMaybe)
 -- import           Control.Arrow ((>>>))
 import           Data.Foldable (foldl')
+import           Control.Monad (replicateM)
 -- import           Data.List (stripPrefix)
 -- import           Text.Read (readMaybe)
 -- import           Text.Printf         (printf)
@@ -29,10 +30,8 @@ import Lib
 
 type Program = [Command]
 
-data Command = UpdateMask Word64 Word64 | MemWrite Word64 Word64
+data Command = UpdateMask Mask | MemWrite Word64 Word64
   deriving (Show, Eq)
-
-type SomethingElse = ()
 
 
 
@@ -48,7 +47,7 @@ parseProg :: Parser Program
 parseProg = parseCommand `sepEndBy` C.eol
 
 parseCommand :: Parser Command
-parseCommand = parseMemWrite <|> parseUpdateMask
+parseCommand = parseUpdateMask <|> parseMemWrite
 
 parseMemWrite :: Parser Command
 parseMemWrite = do
@@ -61,15 +60,7 @@ parseMemWrite = do
 parseUpdateMask :: Parser Command
 parseUpdateMask = do
   C.string "mask = "
-  s <- many (oneOf "10X")
-  case bitMask s of
-    Just masks -> pure masks
-    Nothing    -> fail "Invalid mask string"
-
-bitMask :: String -> Maybe Command
-bitMask m = UpdateMask <$> setOnes <*> setZeroes where
-  setOnes   =                    (readBin $ replace 'X' '0' m)
-  setZeroes = (maxBound .&.) <$> (readBin $ replace 'X' '1' m)
+  UpdateMask <$> replicateM 36 (oneOf "10X")
 
 showBinary :: (Show a, Integral a) => a -> String
 showBinary n = showIntAtBase 2 intToDigit n ""
@@ -78,30 +69,45 @@ showBinary n = showIntAtBase 2 intToDigit n ""
 -------- Part 1 ----------
 --------------------------
 type Memory = Map Word64 Word64
-data ProgState = ProgState Word64 Word64 Memory
+data ProgState1 = ProgState1 { setOnes :: Word64, setZeroes :: Word64, psMem :: Memory}
+
+splitMask :: Mask -> Maybe (Word64, Word64)
+splitMask m = (,) <$> setOnes <*> setZeroes where
+  setOnes   =                    (readBin $ replace 'X' '0' m)
+  setZeroes = (maxBound .&.) <$> (readBin $ replace 'X' '1' m)
 
 part1 :: Program -> Integer
 part1 prog = sum $ toInteger <$> finalMem
-  where ProgState _ _ finalMem = foldl' executeCmd initialState prog
-        initialState = ProgState minBound maxBound mempty
-
+  where ProgState1 _ _ finalMem = foldl' executeCmd1 initialState prog
+        initialState = ProgState1 minBound maxBound mempty
 
 applyMask :: Word64 -> Word64 -> Word64 -> Word64
 applyMask setOnes setZeroes n = (n .|. setOnes) .&. setZeroes
 
-executeCmd :: ProgState -> Command -> ProgState
-executeCmd (ProgState setOnes setZeroes mem) = \case
-  MemWrite addr val -> ProgState setOnes setZeroes
+executeCmd1 :: ProgState1 -> Command -> ProgState1
+executeCmd1 (ProgState1 setOnes setZeroes mem) = \case
+  MemWrite addr val -> ProgState1 setOnes setZeroes
     $ M.insert addr (applyMask setOnes setZeroes val) mem
-  UpdateMask setOnes' setZeroes' -> ProgState setOnes' setZeroes' mem
-
-
+  UpdateMask mask' -> case splitMask mask' of
+    Just (setOnes', setZeroes') -> ProgState1 setOnes' setZeroes' mem
+    Nothing -> error $ "encountered invalid mask: " <> mask'
 
 --------------------------
 -------- Part 2 ----------
 --------------------------
 
-part2 :: Program -> SomethingElse
+-- 1s, 0s, and Xs
+type Mask = String
+
+data ProgState2 = ProgState2 { mask :: Mask, mem :: Memory }
+
+allMasks :: Mask -> [Mask]
+allMasks m = traverse replaceX m
+  where replaceX :: Char -> [Char]
+        replaceX 'X' = "10"
+        replaceX c = pure c
+
+part2 :: Program -> Integer
 part2 = undefined
 
 --------------------------
