@@ -45,7 +45,7 @@ part2 = undefined
 
 doDayn :: IO ()
 doDayn = do
-  let testFp = "inputs/dayntest.txt"
+  -- let fp = "inputs/dayntest.txt"
   let fp     = "inputs/dayn.txt"
   error "not yet implemented"
   input <- readFile fp
