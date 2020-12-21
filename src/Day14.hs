@@ -68,7 +68,7 @@ parseUpdateMask = do
 
 bitMask :: String -> Maybe Command
 bitMask m = UpdateMask <$> setOnes <*> setZeroes where
-  setOnes   =             (readBin $ replace 'X' '0' m)
+  setOnes   =                    (readBin $ replace 'X' '0' m)
   setZeroes = (maxBound .&.) <$> (readBin $ replace 'X' '1' m)
 
 showBinary :: (Show a, Integral a) => a -> String
