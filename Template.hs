@@ -45,6 +45,7 @@ part2 = undefined
 
 doDayn :: IO ()
 doDayn = do
+  putStrLn "Day N:"
   -- let fp = "inputs/dayntest.txt"
   let fp     = "inputs/dayn.txt"
   error "not yet implemented"
