@@ -5,6 +5,9 @@ import Data.List ( sort
 import Data.Foldable (minimumBy)
 import Data.Semigroup (Endo(..), appEndo, stimes)
 import Data.Ord (comparing)
+import Data.Char  (digitToInt)
+import Data.Maybe (listToMaybe)
+import Numeric    (readInt)
 
 -- warning - partial
 intList :: String -> [Int]
@@ -27,3 +30,13 @@ minimumOn f = minimumBy (comparing f)
 
 toFst f x = (f x, x)
 toSnd f x = (x, f x)
+
+
+replace :: Eq a => a -> a -> [a] -> [a]
+replace a b = map replaceIf
+  where replaceIf x | x == a    = b
+                    | otherwise = x
+
+
+readBin :: Integral a => String -> Maybe a
+readBin = fmap fst . listToMaybe . readInt 2 (`elem` "01") digitToInt

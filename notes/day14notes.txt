@@ -1,0 +1,35 @@
+
+suppose we have a mask like
+
+0XXX1
+
+we obtain two masks
+
+00001
+and 
+01111
+
+data:
+10100
+
+we should OR the first mask, then AND the second mask
+
+1s: OR
+
+data mask
+
+1    1 = 1
+1    0 = 1
+0    1 = 1
+0    0 = 0
+
+0s: 
+
+data mask
+
+1    1 = 1
+1    0 = 1
+0    1 = 1
+0    0 = 0
+
+
