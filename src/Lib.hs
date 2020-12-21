@@ -38,5 +38,3 @@ replace a b = map replaceIf
                     | otherwise = x
 
 
-readBin :: Integral a => String -> Maybe a
-readBin = fmap fst . listToMaybe . readInt 2 (`elem` "01") digitToInt
