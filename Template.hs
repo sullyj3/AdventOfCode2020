@@ -4,6 +4,7 @@
 module DayN where
 
 -- delete unneeded stuff
+-- import Data.List.Split (splitWhen)
 -- import           Data.Maybe (mapMaybe)
 -- import           Data.Foldable (foldl', find)
 -- import           Data.List (sort)
@@ -17,31 +18,25 @@ module DayN where
 import Lib
 
 
-data Something = Something
-  deriving (Show, Eq)
-
-type SomethingElse = ()
-
-
 --------------------------
 -------- Parsing ---------
 --------------------------
 
-parse :: String -> Maybe Something
+parse :: String -> Maybe ()
 parse = undefined
 
 --------------------------
 -------- Part 1 ----------
 --------------------------
 
-part1 :: Something -> SomethingElse
+part1 :: () -> ()
 part1 = undefined
 
 --------------------------
 -------- Part 2 ----------
 --------------------------
 
-part2 :: Something -> SomethingElse
+part2 :: () -> ()
 part2 = undefined
 
 --------------------------
