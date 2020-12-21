@@ -4,17 +4,18 @@
 module Day15 where
 
 -- delete unneeded stuff
+import Data.List.Split (splitWhen)
 -- import           Data.Maybe (mapMaybe)
 -- import           Data.Foldable (foldl', find)
 -- import           Data.List (sort)
--- import           Text.Read (readMaybe)
+import           Text.Read (readMaybe)
 -- import           Text.Printf         (printf)
 -- import qualified Data.Set            as S
 -- import           Data.Set            (Set, (\\))
 -- import qualified Data.Map as M
 -- import           Data.Map (Map, (!?))
 
-import Lib
+-- import Lib
 
 
 data Something = Something
@@ -28,7 +29,7 @@ type SomethingElse = ()
 --------------------------
 
 parse :: String -> Maybe [Int]
-parse = undefined
+parse = traverse readMaybe . splitWhen (==',')
 
 --------------------------
 -------- Part 1 ----------
