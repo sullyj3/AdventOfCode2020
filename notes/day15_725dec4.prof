@@ -1,0 +1,96 @@
+	Mon Dec 21 19:22 2020 Time and Allocation Profiling Report  (Final)
+
+	   AdventOfCode2020-exe +RTS -N -p -RTS
+
+	total time  =       11.59 secs   (46344 ticks @ 1000 us, 4 processors)
+	total alloc = 34,348,143,200 bytes  (excludes profiling overheads)
+
+COST CENTRE               MODULE SRC                           %time %alloc
+
+theSequence.next          Day15  src/Day15.hs:(30,9)-(37,83)    47.5   18.2
+theSequence.next.newState Day15  src/Day15.hs:(36,17)-(37,83)   41.8   74.6
+theSequence               Day15  src/Day15.hs:(26,1)-(37,83)     3.8    4.6
+theSequence.next.newVal   Day15  src/Day15.hs:33:32-63           3.4    1.2
+theSequence.next.currTurn Day15  src/Day15.hs:35:17-41           2.9    1.4
+
+
+                                                                                                                                individual      inherited
+COST CENTRE                      MODULE                    SRC                                               no.     entries  %time %alloc   %time %alloc
+
+MAIN                             MAIN                      <built-in>                                        196          0    0.0    0.0   100.0  100.0
+ CAF                             GHC.Conc.Signal           <entire-module>                                   310          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.Encoding           <entire-module>                                   294          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.Encoding.Iconv     <entire-module>                                   292          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.Exception          <entire-module>                                   286          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.Handle.FD          <entire-module>                                   284          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.Handle.Internals   <entire-module>                                   283          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.Handle.Text        <entire-module>                                   282          0    0.0    0.0     0.0    0.0
+ CAF                             Text.Read.Lex             <entire-module>                                   248          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.Event.Thread          <entire-module>                                   243          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.FD                 <entire-module>                                   223          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.Event.Poll            <entire-module>                                   214          0    0.0    0.0     0.0    0.0
+ CAF:defaultSplitter             Data.List.Split.Internals src/Data/List/Split/Internals.hs:58:1-15          347          0    0.0    0.0     0.0    0.0
+  defaultSplitter                Data.List.Split.Internals src/Data/List/Split/Internals.hs:(58,1)-(63,28)   411          1    0.0    0.0     0.0    0.0
+ CAF:doDay1                      Day15                     <no location info>                                362          0    0.0    0.0     0.0    0.0
+  doDay15                        Day15                     src/Day15.hs:(43,1)-(49,42)                       393          1    0.0    0.0     0.0    0.0
+ CAF:doDay3                      Day15                     <no location info>                                355          0    0.0    0.0     0.0    0.0
+ CAF:lvl1_ryOH                   Day15                     <no location info>                                358          0    0.0    0.0     0.0    0.0
+  parse                          Day15                     src/Day15.hs:17:1-46                              430          0    0.0    0.0     0.0    0.0
+ CAF:main1                       Main                      <no location info>                                390          0    0.0    0.0     0.0    0.0
+  main                           Main                      app/Main.hs:30:1-14                               392          1    0.0    0.0     0.0    0.0
+ CAF:newVal_ryOP                 Day15                     src/Day15.hs:31:32-37                             361          0    0.0    0.0     0.0    0.0
+  theSequence                    Day15                     src/Day15.hs:(26,1)-(37,83)                       447          0    0.0    0.0     0.0    0.0
+   theSequence.next              Day15                     src/Day15.hs:(30,9)-(37,83)                       448          0    0.0    0.0     0.0    0.0
+    theSequence.next.newVal      Day15                     src/Day15.hs:31:32-41                             449          1    0.0    0.0     0.0    0.0
+ CAF:parse                       Day15                     src/Day15.hs:17:1-5                               359          0    0.0    0.0     0.0    0.0
+  parse                          Day15                     src/Day15.hs:17:1-46                              398          1    0.0    0.0     0.0    0.0
+ CAF:parse_g                     Day15                     <no location info>                                357          0    0.0    0.0     0.0    0.0
+  parse                          Day15                     src/Day15.hs:17:1-46                              400          0    0.0    0.0     0.0    0.0
+   splitWhen                     Data.List.Split.Internals src/Data/List/Split/Internals.hs:428:1-40         402          0    0.0    0.0     0.0    0.0
+    dropDelims                   Data.List.Split.Internals src/Data/List/Split/Internals.hs:295:1-39         412          1    0.0    0.0     0.0    0.0
+    split                        Data.List.Split.Internals src/Data/List/Split/Internals.hs:249:1-68         403          1    0.0    0.0     0.0    0.0
+     delimiter                   Data.List.Split.Internals src/Data/List/Split/Internals.hs:25:30-38         420          1    0.0    0.0     0.0    0.0
+     postProcess                 Data.List.Split.Internals src/Data/List/Split/Internals.hs:(163,1)-(168,45) 406          1    0.0    0.0     0.0    0.0
+      condensePolicy             Data.List.Split.Internals src/Data/List/Split/Internals.hs:32:30-43         415          1    0.0    0.0     0.0    0.0
+      delimPolicy                Data.List.Split.Internals src/Data/List/Split/Internals.hs:27:30-40         409          1    0.0    0.0     0.0    0.0
+      doMerge                    Data.List.Split.Internals src/Data/List/Split/Internals.hs:(205,1)-(207,14) 408          1    0.0    0.0     0.0    0.0
+      finalBlankPolicy           Data.List.Split.Internals src/Data/List/Split/Internals.hs:37:30-45         429          1    0.0    0.0     0.0    0.0
+      initBlankPolicy            Data.List.Split.Internals src/Data/List/Split/Internals.hs:35:30-44         427          1    0.0    0.0     0.0    0.0
+    whenElt                      Data.List.Split.Internals src/Data/List/Split/Internals.hs:285:1-57         410          1    0.0    0.0     0.0    0.0
+ CAF:splitWhen                   Data.List.Split.Internals src/Data/List/Split/Internals.hs:428:1-9          349          0    0.0    0.0     0.0    0.0
+  splitWhen                      Data.List.Split.Internals src/Data/List/Split/Internals.hs:428:1-40         401          1    0.0    0.0     0.0    0.0
+ CAF:theSequence1                Day15                     <no location info>                                360          0    0.0    0.0     0.0    0.0
+  theSequence                    Day15                     src/Day15.hs:(26,1)-(37,83)                       441          0    0.0    0.0     0.0    0.0
+   theSequence.initialState      Day15                     src/Day15.hs:(27,9)-(28,95)                       442          0    0.0    0.0     0.0    0.0
+ doDay15                         Day15                     src/Day15.hs:(43,1)-(49,42)                       394          0    0.6    0.0   100.0  100.0
+  theSequence                    Day15                     src/Day15.hs:(26,1)-(37,83)                       396          2    3.8    4.6    99.4  100.0
+   theSequence.next              Day15                     src/Day15.hs:(30,9)-(37,83)                       443   30002008   47.5   18.2    95.6   95.4
+    theSequence.next.currTurn    Day15                     src/Day15.hs:35:17-41                             446   30002006    2.9    1.4     2.9    1.4
+    theSequence.next.newState    Day15                     src/Day15.hs:(36,17)-(37,83)                      444   30002006   41.8   74.6    41.8   74.6
+    theSequence.next.newVal      Day15                     src/Day15.hs:33:32-63                             445   26389758    3.4    1.2     3.4    1.2
+   theSequence.initialState      Day15                     src/Day15.hs:(27,9)-(28,95)                       440          2    0.0    0.0     0.0    0.0
+  doDay15.(...)                  Day15                     src/Day15.hs:47:7-27                              397          1    0.0    0.0     0.0    0.0
+   parse                         Day15                     src/Day15.hs:17:1-46                              399          0    0.0    0.0     0.0    0.0
+    splitWhen                    Data.List.Split.Internals src/Data/List/Split/Internals.hs:428:1-40         404          0    0.0    0.0     0.0    0.0
+     split                       Data.List.Split.Internals src/Data/List/Split/Internals.hs:249:1-68         405          0    0.0    0.0     0.0    0.0
+      fromElem                   Data.List.Split.Internals src/Data/List/Split/Internals.hs:(116,1)-(117,24) 431          6    0.0    0.0     0.0    0.0
+      splitInternal              Data.List.Split.Internals src/Data/List/Split/Internals.hs:(139,1)-(148,70) 416          6    0.0    0.0     0.0    0.0
+       splitInternal.(...)       Data.List.Split.Internals src/Data/List/Split/Internals.hs:144:3-31         418          6    0.0    0.0     0.0    0.0
+        breakDelim               Data.List.Split.Internals src/Data/List/Split/Internals.hs:(151,1)-(156,36) 419         15    0.0    0.0     0.0    0.0
+         matchDelim              Data.List.Split.Internals src/Data/List/Split/Internals.hs:(73,1)-(77,23)   421         19    0.0    0.0     0.0    0.0
+          matchDelim.\           Data.List.Split.Internals src/Data/List/Split/Internals.hs:76:60-71         435          5    0.0    0.0     0.0    0.0
+         breakDelim.(...)        Data.List.Split.Internals src/Data/List/Split/Internals.hs:155:25-52        433          9    0.0    0.0     0.0    0.0
+         breakDelim.match        Data.List.Split.Internals src/Data/List/Split/Internals.hs:155:25-52        438          9    0.0    0.0     0.0    0.0
+         breakDelim.ys           Data.List.Split.Internals src/Data/List/Split/Internals.hs:155:25-52        432          9    0.0    0.0     0.0    0.0
+       splitInternal.match       Data.List.Split.Internals src/Data/List/Split/Internals.hs:144:3-31         436          6    0.0    0.0     0.0    0.0
+       splitInternal.toSplitList Data.List.Split.Internals src/Data/List/Split/Internals.hs:(146,3)-(148,70) 437          6    0.0    0.0     0.0    0.0
+       splitInternal.xs          Data.List.Split.Internals src/Data/List/Split/Internals.hs:144:3-31         417          6    0.0    0.0     0.0    0.0
+      postProcess                Data.List.Split.Internals src/Data/List/Split/Internals.hs:(163,1)-(168,45) 407          0    0.0    0.0     0.0    0.0
+       doCondense                Data.List.Split.Internals src/Data/List/Split/Internals.hs:(178,1)-(183,20) 414          1    0.0    0.0     0.0    0.0
+       doDrop                    Data.List.Split.Internals src/Data/List/Split/Internals.hs:(172,1)-(173,14) 425          1    0.0    0.0     0.0    0.0
+       dropFinal                 Data.List.Split.Internals src/Data/List/Split/Internals.hs:(236,1)-(241,26) 428          1    0.0    0.0     0.0    0.0
+       dropInitial               Data.List.Split.Internals src/Data/List/Split/Internals.hs:(231,1)-(232,19) 426          1    0.0    0.0     0.0    0.0
+       insertBlanks              Data.List.Split.Internals src/Data/List/Split/Internals.hs:(189,1)-(191,38) 423          1    0.0    0.0     0.0    0.0
+        insertBlanks'            Data.List.Split.Internals src/Data/List/Split/Internals.hs:(195,1)-(201,49) 424         12    0.0    0.0     0.0    0.0
+  doDay15.fp                     Day15                     src/Day15.hs:45:7-33                              395          1    0.0    0.0     0.0    0.0
+  doDay15.ns                     Day15                     src/Day15.hs:47:7-27                              439          1    0.0    0.0     0.0    0.0
